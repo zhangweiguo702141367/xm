@@ -1,6 +1,7 @@
 package com.zh.dubbo.manage.common;
 
 import com.zh.dubbo.entity.SmsConfig;
+import com.zh.dubbo.entity.SmsTemplate;
 
 import java.util.List;
 import java.util.Map;
@@ -27,10 +28,10 @@ public interface CommonService {
     public String getConfigByNid(String nid,List<SmsConfig> configs) throws Exception;
 
     /**
-     * 根据nid获取配置对象
+     * 根据nid获取模版对象
      * @param nid
      * @return
      * @throws Exception
      */
-    public SmsConfig getConfigByNid(String nid) throws Exception;
+    public SmsTemplate getTemplateByNid(String nid) throws Exception;
 }

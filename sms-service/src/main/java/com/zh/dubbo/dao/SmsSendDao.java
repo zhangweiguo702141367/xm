@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 @Mapper
 @Component
 public interface SmsSendDao {
+
     @Insert("INSERT INTO sys_sms_log(mobile,msg,facilitator,env,create_time,status) VALUES(#{mobile},#{msg},#{facilitator},#{env},#{createTime},#{status})")
     public int insertSmsLog(SmsLog smsLog);
 }

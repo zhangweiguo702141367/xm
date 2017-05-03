@@ -2,6 +2,7 @@ package com.zh.dubbo.manage.common.impl;
 
 import com.zh.dubbo.dao.CommonDao;
 import com.zh.dubbo.entity.SmsConfig;
+import com.zh.dubbo.entity.SmsTemplate;
 import com.zh.dubbo.manage.common.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,9 @@ public class CommonServiceImpl implements CommonService{
     }
 
     @Override
-    public SmsConfig getConfigByNid(String nid) throws Exception {
-        return commonDao.getSmsConfigByNid(nid);
+    public SmsTemplate getTemplateByNid(String nid) throws Exception {
+        return commonDao.getSmsTemplateByNid(nid);
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.zh.dubbo.dao;
 
 import com.zh.dubbo.entity.SmsConfig;
+import com.zh.dubbo.entity.SmsTemplate;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +19,10 @@ public interface CommonDao {
             @Result(property = "name", column = "name"),
             @Result(property = "value", column = "value"),
     })
-    @Select("SELECT * FROM zh_system.sys_sms_conf")
+    @Select("SELECT * FROM zh_system.sys_sms_conf WHERE nid LIKE CONCAT(#{type},'%')")
     List<SmsConfig> getConfigList(@Param("type") String type);
 
-    @Select("SELECT * FROM sys_sms_conf WHERE nid=#{nid}")
-    SmsConfig getSmsConfigByNid(@Param("nid") String nid);
+    @Select("SELECT * FROM sys_sms_template WHERE nid=#{nid}")
+    SmsTemplate getSmsTemplateByNid(@Param("nid") String nid);
+
 }

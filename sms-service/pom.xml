@@ -155,13 +155,12 @@
 			<version>1.0.0</version>
 		</dependency>
 		<!--阿里大于  end-->
-		<!--工具类  start-->
 		<dependency>
 			<groupId>com.zh</groupId>
-			<artifactId>com</artifactId>
-			<version>1.0.0</version>
+			<artifactId>commonutil</artifactId>
+			<version>1.0.3</version>
 		</dependency>
-		<!--工具类  end-->
+
 	</dependencies>
 
 	<build>

@@ -28,7 +28,11 @@ public class SmsController {
     public String sendSms(){
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("mobile_phone","18811328493");
-        params.put("SMS_TemplateId","SMS_52085322");
+        params.put("sms_template_id","SMS_52085322");
+        params.put("sms_template_nid","register");
+        Map<String,Object> templateParams = new HashMap<>();
+        templateParams.put("code","1314258");
+        params.put("template_params",templateParams);
         return serviceFo.sendSms(params);
     }
 }

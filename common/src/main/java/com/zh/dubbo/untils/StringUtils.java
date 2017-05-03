@@ -9,10 +9,7 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * Created by 70214 on 2017/4/25.
@@ -260,5 +257,24 @@ public class StringUtils {
             }
         }
         return true;
+    }
+
+    /**
+     * 将模版中的参数对应到相应位置
+     * @param template
+     * @param params
+     * @return
+     */
+    public static String replaceMap(String template,Map<String,Object> params) throws Exception{
+            if(template == null || "".equals(template)){
+                throw new Exception("模版不能为空！");
+            }
+            if(params == null || params.size() == 0){
+                throw new Exception("参数项不能为空！");
+            }
+            for (String key :params.keySet()) {
+                    template = template.replaceAll("\\$\\{"+key+"\\}",params.get(key).toString());
+            }
+            return template;
     }
 }

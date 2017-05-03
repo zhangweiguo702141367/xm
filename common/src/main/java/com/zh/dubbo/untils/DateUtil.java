@@ -679,6 +679,15 @@ public class DateUtil {
 		return timestamp;
 	}
 
+	/**
+	 * 获取当前时间的毫秒值
+	 * @return
+	 */
+	public static Long getCurrentTime(){
+		Date now = new Date();
+		return now.getTime()/1000;
+	}
+
 	public static void main(String[] args) {
 		System.out.println(getYear() + "|" + getMonth() + "|" + getDate());
 	}
