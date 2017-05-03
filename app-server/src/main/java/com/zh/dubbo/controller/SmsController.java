@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by 70214 on 2017/4/23.
@@ -21,5 +23,12 @@ public class SmsController {
 
         System.out.println("this request ip +"+ IPUtil.getIpAddr(request));
         return serviceFo.test1();
+    }
+    @GetMapping("/sendSms")
+    public String sendSms(){
+        Map<String,Object> params = new HashMap<String,Object>();
+        params.put("mobile_phone","18811328493");
+        params.put("SMS_TemplateId","SMS_52085322");
+        return serviceFo.sendSms(params);
     }
 }

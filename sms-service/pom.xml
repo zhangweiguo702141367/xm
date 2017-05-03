@@ -148,6 +148,20 @@
 			<version>1.7.21</version>
 		</dependency>
 		<!--Loging end-->
+		<!--阿里大于 start-->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>sms</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<!--阿里大于  end-->
+		<!--工具类  start-->
+		<dependency>
+			<groupId>com.zh</groupId>
+			<artifactId>com</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<!--工具类  end-->
 	</dependencies>
 
 	<build>

@@ -2,7 +2,9 @@ package com.zh.dubbo.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.dubbo.container.page.Page;
+import com.zh.dubbo.manage.alibaba.SmsSendAliService;
 import com.zh.dubbo.service.SmsService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 
@@ -11,6 +13,8 @@ import java.util.Map;
  */
 @Service(protocol = { "dubbo" })
 public class SmsServiceImpl implements SmsService {
+    @Autowired
+    private SmsSendAliService smsSendAliService;
     @Override
     public String test() {
         return "this is a test for smsDubbo";
@@ -18,7 +22,12 @@ public class SmsServiceImpl implements SmsService {
 
     @Override
     public Map<String, Object> sendCodeSMS(int facilitator, Map<String, Object> params) throws Exception {
-        return null;
+        System.out.println("enter here");
+        if(facilitator == 1){
+            return smsSendAliService.sendCodeSMS(params);
+        }else{
+            return null;
+        }
     }
 
     @Override
