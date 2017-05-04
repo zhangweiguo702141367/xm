@@ -1,9 +1,11 @@
 package com.zh.dubbo.controller;
 
+import com.github.pagehelper.PageInfo;
 import com.zh.dubbo.fo.ServiceFo;
 import com.zh.dubbo.untils.IPUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServlet;
@@ -34,5 +36,11 @@ public class SmsController {
         templateParams.put("code","1314258");
         params.put("template_params",templateParams);
         return serviceFo.sendSms(params);
+    }
+
+    @GetMapping("/getSmsLogs")
+    public PageInfo getSmsLogs(){
+        Map<String,Object> params = new HashMap<String,Object>();
+        return serviceFo.getSendRecords(params);
     }
 }

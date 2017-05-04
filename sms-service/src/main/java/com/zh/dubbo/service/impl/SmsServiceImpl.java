@@ -1,8 +1,9 @@
 package com.zh.dubbo.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.alibaba.dubbo.container.page.Page;
+import com.github.pagehelper.PageInfo;
 import com.zh.dubbo.manage.alibaba.SmsSendAliService;
+import com.zh.dubbo.manage.common.CommonService;
 import com.zh.dubbo.service.SmsService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -15,6 +16,8 @@ import java.util.Map;
 public class SmsServiceImpl implements SmsService {
     @Autowired
     private SmsSendAliService smsSendAliService;
+    @Autowired
+    private CommonService commonService;
     @Override
     public String test() {
         return "this is a test for smsDubbo";
@@ -36,7 +39,7 @@ public class SmsServiceImpl implements SmsService {
     }
 
     @Override
-    public Page getSendRecords(Map<String, Object> params) throws Exception {
-        return null;
+    public PageInfo getSendRecords(Map<String, Object> params) throws Exception {
+        return commonService.getSendRecords(params);
     }
 }

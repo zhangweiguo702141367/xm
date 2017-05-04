@@ -1,7 +1,11 @@
 package com.zh.dubbo.manage.common.impl;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.zh.dubbo.dao.CommonDao;
+import com.zh.dubbo.dao.SmsSendDao;
 import com.zh.dubbo.entity.SmsConfig;
+import com.zh.dubbo.entity.SmsLog;
 import com.zh.dubbo.entity.SmsTemplate;
 import com.zh.dubbo.manage.common.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +21,8 @@ import java.util.Map;
 public class CommonServiceImpl implements CommonService{
     @Autowired
     private CommonDao commonDao;
+    @Autowired
+    private SmsSendDao smsSendDao;
     @Override
     public List<SmsConfig> getConfigList(String type) throws Exception {
         return commonDao.getConfigList(type);
@@ -48,5 +54,20 @@ public class CommonServiceImpl implements CommonService{
         return commonDao.getSmsTemplateByNid(nid);
     }
 
-
+    @Override
+    public PageInfo getSendRecords(Map<String, Object> params) throws Exception {
+        if(params == null && params.size() == 0){
+            throw new Exception("参数列表不能为空!");
+        }
+        //第几页
+        Integer pageNum = params.get("pageNum")==null?1:Integer.valueOf(params.get("pageNum").toString());
+        //每页显示多少个
+        Integer pageSize = params.get("pageSize")==null?8:Integer.valueOf(params.get("pageSize").toString());
+        PageHelper.startPage(pageNum, pageSize);
+        //获取分页查询到的数据
+        List<SmsLog> smsLogList = smsSendDao.queryPageByParams(params);
+        //分装成PageInfo
+        PageInfo smsLogPage = new PageInfo(smsLogList);
+        return smsLogPage;
+    }
 }

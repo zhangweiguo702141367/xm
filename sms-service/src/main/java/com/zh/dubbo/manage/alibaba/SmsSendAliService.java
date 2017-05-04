@@ -1,5 +1,7 @@
 package com.zh.dubbo.manage.alibaba;
 
+import com.github.pagehelper.PageInfo;
+
 import java.util.Map;
 
 /**
@@ -13,4 +15,5 @@ public interface SmsSendAliService {
      * @throws Exception
      */
     public Map<String,Object> sendCodeSMS(Map<String,Object> params) throws Exception;
+
 }

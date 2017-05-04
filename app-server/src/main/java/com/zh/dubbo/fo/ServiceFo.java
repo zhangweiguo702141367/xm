@@ -1,6 +1,7 @@
 package com.zh.dubbo.fo;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.github.pagehelper.PageInfo;
 import com.zh.dubbo.service.SmsService;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +25,13 @@ public class ServiceFo {
             return e.getMessage();
         }
         return null;
+    }
+    public PageInfo getSendRecords(Map<String,Object> params){
+        try{
+            return smsService.getSendRecords(params);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+            return null;
+        }
     }
 }

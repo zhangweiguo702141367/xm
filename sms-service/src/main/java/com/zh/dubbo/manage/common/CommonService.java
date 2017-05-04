@@ -1,5 +1,6 @@
 package com.zh.dubbo.manage.common;
 
+import com.github.pagehelper.PageInfo;
 import com.zh.dubbo.entity.SmsConfig;
 import com.zh.dubbo.entity.SmsTemplate;
 
@@ -34,4 +35,11 @@ public interface CommonService {
      * @throws Exception
      */
     public SmsTemplate getTemplateByNid(String nid) throws Exception;
+    /**
+     * 获取短信记录列表页
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    public PageInfo getSendRecords(Map<String,Object> params) throws Exception;
 }

@@ -1,7 +1,8 @@
 package com.zh.dubbo.service;
 
 
-import com.alibaba.dubbo.container.page.Page;
+
+import com.github.pagehelper.PageInfo;
 
 import java.util.Map;
 
@@ -12,5 +13,5 @@ public interface SmsService {
     public String test();
     public Map<String,Object> sendCodeSMS(int facilitator, Map<String,Object> params) throws Exception;
     public Map<String,Object> sendVoiceSMS(int facilitator,Map<String,Object> params) throws Exception;
-    public Page getSendRecords(Map<String,Object> params) throws Exception;
+    public PageInfo getSendRecords(Map<String,Object> params) throws Exception;
 }
