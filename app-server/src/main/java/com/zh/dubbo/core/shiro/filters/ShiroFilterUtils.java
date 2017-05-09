@@ -1,11 +1,15 @@
 package com.zh.dubbo.core.shiro.filters;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
+
+
+import com.zh.dubbo.utils.LoggerUtils;
+
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
 
 
 /**
@@ -48,7 +52,7 @@ public class ShiroFilterUtils {
 	
 	/**
 	 * response 输出JSON
-	 * @param hresponse
+	 * @param response
 	 * @param resultMap
 	 * @throws IOException
 	 */
@@ -58,7 +62,7 @@ public class ShiroFilterUtils {
 		try {
 			response.setCharacterEncoding("UTF-8");
 			out = response.getWriter();
-			out.println(JSONObject.fromObject(resultMap).toString());
+			out.println(JSONObject.toJSONString(resultMap));
 		} catch (Exception e) {
 			LoggerUtils.fmtError(CLAZZ, e, "输出JSON报错。");
 		}finally{

@@ -1,17 +1,18 @@
 package com.zh.dubbo.core.shiro.filters;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
+
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
 
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -87,7 +88,7 @@ public class SimpleAuthFilter extends AccessControlFilter {
 			throws IOException {
 		hresponse.setCharacterEncoding("UTF-8");
 		PrintWriter out = hresponse.getWriter();
-		out.println(JSONObject.fromObject(resultMap).toString());
+		out.println(JSONObject.toJSONString(resultMap));
 		out.flush();
 		out.close();
 	}

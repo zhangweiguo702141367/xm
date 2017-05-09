@@ -1,21 +1,24 @@
 package com.zh.dubbo.core.shiro.filters;
 
+import com.alibaba.dubbo.common.json.JSONObject;
+import com.zh.dubbo.core.shiro.cache.VCache;
+import com.zh.dubbo.core.shiro.session.ShiroSessionRepository;
+import com.zh.dubbo.core.shiro.tooken.manager.TokenManager;
+import com.zh.dubbo.utils.LoggerUtils;
+import org.apache.shiro.session.Session;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.filter.AccessControlFilter;
+import org.apache.shiro.web.util.WebUtils;
+
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-
-
-import org.apache.shiro.session.Session;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.web.filter.AccessControlFilter;
-import org.apache.shiro.web.util.WebUtils;
 
 /**
  * 
@@ -145,7 +148,8 @@ public class KickoutSessionFilter extends AccessControlFilter {
 		try {
 			hresponse.setCharacterEncoding("UTF-8");
 			PrintWriter out = hresponse.getWriter();
-			out.println(JSONObject.fromObject(resultMap).toString());
+//			out.println(JSONObject.toJSONString(resultMap));
+			out.println(JSONObject.toJSONString(resultMap));
 			out.flush();
 			out.close();
 		} catch (Exception e) {

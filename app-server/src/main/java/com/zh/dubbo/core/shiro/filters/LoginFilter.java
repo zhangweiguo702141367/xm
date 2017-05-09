@@ -1,12 +1,13 @@
 package com.zh.dubbo.core.shiro.filters;
 
-import java.util.HashMap;
-import java.util.Map;
+
+import com.zh.dubbo.utils.LoggerUtils;
+import org.apache.shiro.web.filter.AccessControlFilter;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-
-import org.apache.shiro.web.filter.AccessControlFilter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 
@@ -33,7 +34,7 @@ public class LoginFilter  extends AccessControlFilter {
 	protected boolean isAccessAllowed(ServletRequest request,
 			ServletResponse response, Object mappedValue) throws Exception {
 		
-		UUser token = TokenManager.getToken();
+		User token = TokenManager.getToken();
 		
 		if(null != token || isLoginRequest(request, response)){// && isEnabled()
             return Boolean.TRUE;
