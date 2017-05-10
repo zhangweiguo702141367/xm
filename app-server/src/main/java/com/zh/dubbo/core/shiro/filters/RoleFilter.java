@@ -30,18 +30,22 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class RoleFilter extends AccessControlFilter {
 
-	static final String LOGIN_URL = "http://www.sojson.com/user/open/toLogin.shtml";
-	static final String UNAUTHORIZED_URL = "http://www.sojson.com/unauthorized.html";
+	static final String LOGIN_URL = "/login";
+	static final String UNAUTHORIZED_URL = "/unauthorized";
 	
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request,
 			ServletResponse response, Object mappedValue) throws Exception {
 		String[] arra = (String[])mappedValue;
-		
+		System.out.println("enter RoleFilter1");
 		Subject subject = getSubject(request, response);
-		for (String role : arra) {
-			if(subject.hasRole("role:" + role)){
-				return true;
+		if(arra == null){
+			return false;
+		}else{
+			for (String role : arra) {
+				if(subject.hasRole("role:" + role)){
+					return true;
+				}
 			}
 		}
 		return false;
@@ -50,7 +54,7 @@ public class RoleFilter extends AccessControlFilter {
 	@Override
 	protected boolean onAccessDenied(ServletRequest request,
 			ServletResponse response) throws Exception {
-		
+		System.out.println("enter RoleFilter2");
 			Subject subject = getSubject(request, response);
 	        if (subject.getPrincipal() == null) {//表示没有登录，重定向到登录页面  
 	            saveRequest(request);  

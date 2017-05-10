@@ -5,11 +5,10 @@ import com.zh.dubbo.core.shiro.cache.VCache;
 import com.zh.dubbo.fo.ServiceFo;
 import com.zh.dubbo.untils.IPUtil;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,16 +24,41 @@ public class SmsController {
     ServiceFo serviceFo;
     @GetMapping("/login")
     public String test1(HttpServletRequest request){
-        Session session = SecurityUtils.getSubject().getSession();
-        String test1 = "login this request ip +"+ IPUtil.getIpAddr(request);
+        try {
+            UsernamePasswordToken token = new UsernamePasswordToken("zhangsan", "11111");
+            SecurityUtils.getSubject().login(token);
+        }catch (Exception e){
+            return  "login failed";
+        }
+        return "login success";
+    }
+    @GetMapping("/unauthorized")
+    public String unauthorized(HttpServletRequest request){
 //        VCache.set("zhangsan","saaa");
-        return VCache.get("zhangsan");
+        return "unauthorized";
     }
     @GetMapping("/test1")
     public String login(HttpServletRequest request){
-
         String result = "test1 this request ip +"+ IPUtil.getIpAddr(request);
-        return result;
+        try {
+            UsernamePasswordToken token = new UsernamePasswordToken("zhangsan", "a123123");
+            SecurityUtils.getSubject().login(token);
+        }catch (Exception e){
+            return  "login failed";
+        }
+        return "login success";
+    }
+    //踢出用户
+    @GetMapping(value="kickouting")
+    public String kickouting() {
+
+        return "kickouting";
+    }
+
+    //被踢出后跳转的页面
+    @GetMapping(value="kickout")
+    public String kickout() {
+        return "kickout";
     }
     @GetMapping("/sendSms")
     public String sendSms(){

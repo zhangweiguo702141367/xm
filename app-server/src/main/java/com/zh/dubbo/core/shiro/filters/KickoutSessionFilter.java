@@ -4,7 +4,9 @@ import com.alibaba.dubbo.common.json.JSON;
 import com.zh.dubbo.core.shiro.cache.VCache;
 import com.zh.dubbo.core.shiro.session.ShiroSessionRepository;
 import com.zh.dubbo.core.shiro.tooken.manager.TokenManager;
+import com.zh.dubbo.entity.UUser;
 import com.zh.dubbo.utils.LoggerUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
@@ -56,7 +58,7 @@ public class KickoutSessionFilter extends AccessControlFilter {
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request,
 			ServletResponse response, Object mappedValue) throws Exception {
-		
+		System.out.println("enter kickoutSessionFilter1");
 		HttpServletRequest httpRequest = ((HttpServletRequest)request);
 		String url = httpRequest.getRequestURI();
 		Subject subject = getSubject(request, response);
@@ -91,7 +93,9 @@ public class KickoutSessionFilter extends AccessControlFilter {
 		infoMap = null == infoMap ? new LinkedHashMap<Long, Serializable>() : infoMap;
 		
 		//获取tokenId
-		Long userId = TokenManager.getUserId();
+		UUser token = (UUser) SecurityUtils.getSubject().getPrincipal();
+		Long userId = token.getId();
+		//		Long userId = TokenManager.getUserId();
 		
 		//如果已经包含当前Session，并且是同一个用户，跳过。
 		if(infoMap.containsKey(userId) && infoMap.containsValue(sessionId)){
@@ -133,7 +137,7 @@ public class KickoutSessionFilter extends AccessControlFilter {
 	@Override
 	protected boolean onAccessDenied(ServletRequest request,
 			ServletResponse response) throws Exception {
-		
+		System.out.println("enter kickoutSessionFilter2");
 		//先退出
 		Subject subject = getSubject(request, response);
 		subject.logout();

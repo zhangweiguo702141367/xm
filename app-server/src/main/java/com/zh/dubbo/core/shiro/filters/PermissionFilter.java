@@ -36,7 +36,7 @@ public class PermissionFilter extends AccessControlFilter {
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request,
 			ServletResponse response, Object mappedValue) throws Exception {
-		
+		System.out.println("enter permissionFilter1");
 		//先判断带参数的权限判断
 		Subject subject = getSubject(request, response);
 		if(null != mappedValue){
@@ -76,7 +76,7 @@ public class PermissionFilter extends AccessControlFilter {
 	@Override
 	protected boolean onAccessDenied(ServletRequest request,
 			ServletResponse response) throws Exception {
-		
+		System.out.println("enter permissionFilter2");
 			Subject subject = getSubject(request, response);
 	        if (null == subject.getPrincipal()) {//表示没有登录，重定向到登录页面  
 	            saveRequest(request);  

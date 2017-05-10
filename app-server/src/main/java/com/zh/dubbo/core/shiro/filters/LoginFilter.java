@@ -4,6 +4,7 @@ package com.zh.dubbo.core.shiro.filters;
 import com.zh.dubbo.core.shiro.tooken.manager.TokenManager;
 import com.zh.dubbo.entity.UUser;
 import com.zh.dubbo.utils.LoggerUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.web.filter.AccessControlFilter;
 
 import javax.servlet.ServletRequest;
@@ -35,12 +36,12 @@ public class LoginFilter  extends AccessControlFilter {
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request,
 			ServletResponse response, Object mappedValue) throws Exception {
-
-		UUser token = TokenManager.getToken();
+		System.out.println("enter loginfilter1");
+		UUser token = (UUser) SecurityUtils.getSubject().getPrincipal();
 		
 		if(null != token || isLoginRequest(request, response)){// && isEnabled()
             return Boolean.TRUE;
-        } 
+        }
 		if (ShiroFilterUtils.isAjax(request)) {// ajax请求
 			Map<String,String> resultMap = new HashMap<String, String>();
 			LoggerUtils.debug(getClass(), "当前用户没有登录，并且是Ajax请求！");
@@ -55,6 +56,7 @@ public class LoginFilter  extends AccessControlFilter {
 	@Override
 	protected boolean onAccessDenied(ServletRequest request, ServletResponse response)
 			throws Exception {
+		System.out.println("enter loginfilter2");
 		//保存Request和Response 到登录后的链接
 		saveRequestAndRedirectToLogin(request, response);
 		return Boolean.FALSE ;

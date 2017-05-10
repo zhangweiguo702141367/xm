@@ -43,7 +43,7 @@ public class SimpleAuthFilter extends AccessControlFilter {
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request,
 			ServletResponse response, Object mappedValue) throws Exception {
-
+		System.out.println("enter SimpleAuthFilter1");
 		HttpServletRequest httpRequest = ((HttpServletRequest)request);
 		String url = httpRequest.getRequestURI();
 		if(url.startsWith("/open/")){
@@ -69,7 +69,7 @@ public class SimpleAuthFilter extends AccessControlFilter {
 	@Override
 	protected boolean onAccessDenied(ServletRequest request,
 			ServletResponse response) throws Exception {
-		
+		System.out.println("enter SimpleAuthFilter2");
 		//先退出
 		Subject subject = getSubject(request, response);
 		subject.logout();

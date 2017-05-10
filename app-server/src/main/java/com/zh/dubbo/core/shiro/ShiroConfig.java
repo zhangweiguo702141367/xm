@@ -8,18 +8,24 @@ import com.zh.dubbo.core.shiro.filters.*;
 import com.zh.dubbo.core.shiro.listener.CustomSessionListener;
 import com.zh.dubbo.core.shiro.session.CustomSessionManager;
 import com.zh.dubbo.core.shiro.tooken.MyShiroRealm;
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.session.SessionListener;
+import org.apache.shiro.session.mgt.ExecutorServiceSessionValidationScheduler;
 import org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.mgt.CookieRememberMeManager;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
 import org.apache.shiro.web.servlet.SimpleCookie;
 import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.MethodInvokingFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -71,7 +77,9 @@ public class ShiroConfig {
         chains.put("/login", "anon");
         chains.put("/unauthor", "anon");
         chains.put("/logout", "logout");
-        chains.put("/**", "authc");
+        chains.put("/unauthorized", "anon");
+        chains.put("/favicon*", "anon");
+        chains.put("/**", "login,kickout");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(chains);
         //设置filters
         Map<String, Filter> filters = new LinkedHashMap<String,Filter>();
@@ -123,8 +131,12 @@ public class ShiroConfig {
         sessionManager.setSessionListeners(sessionListeners);
         //<!-- 间隔多少时间检查，不配置是60分钟 -->
 //        sessionManager.setSessionValidationScheduler(sessionValidationScheduler());
+        //v2.1
+        sessionManager.setSessionValidationScheduler(getExecutorServiceSessionValidationScheduler());
         //<!-- 是否开启 检测，默认开启 -->
         sessionManager.setSessionValidationSchedulerEnabled(true);
+        //v2.1
+        sessionManager.setSessionIdCookieEnabled(true);
         //是否删除无效的，默认也是开启
         sessionManager.setDeleteInvalidSessions(true);
         //会话Cookie模板
@@ -165,6 +177,13 @@ public class ShiroConfig {
 //
 //        return sessionValidationScheduler();
 //    }
+    //v2.1
+    @Bean(name = "sessionValidationScheduler")
+    public ExecutorServiceSessionValidationScheduler getExecutorServiceSessionValidationScheduler() {
+        ExecutorServiceSessionValidationScheduler scheduler = new ExecutorServiceSessionValidationScheduler();
+        scheduler.setInterval(900000);
+        return scheduler;
+    }
     //SessionIdCookie配置
     @Bean
     public SimpleCookie sessionIdCookie(){
@@ -263,9 +282,30 @@ public class ShiroConfig {
         LifecycleBeanPostProcessor lifecycleBeanPostProcessor = new LifecycleBeanPostProcessor();
         return lifecycleBeanPostProcessor;
     }
-
-
-    //redis配置
+    //v2.1
+    @Bean
+    @DependsOn("lifecycleBeanPostProcessor")
+    public DefaultAdvisorAutoProxyCreator getAutoProxyCreator(){
+        DefaultAdvisorAutoProxyCreator creator = new DefaultAdvisorAutoProxyCreator();
+        creator.setProxyTargetClass(true);
+        return creator;
+    }
+    //v2.1
+    @Bean
+    public AuthorizationAttributeSourceAdvisor getAuthorizationAttributeSourceAdvisor(){
+        AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
+        advisor.setSecurityManager(securityManager());
+        return advisor;
+    }
+    //v2.1
+    @Bean
+    public MethodInvokingFactoryBean getMethodInvokingFactoryBean(){
+        MethodInvokingFactoryBean factoryBean = new MethodInvokingFactoryBean();
+        factoryBean.setStaticMethod("org.apache.shiro.SecurityUtils.setSecurityManager");
+        factoryBean.setArguments(new Object[]{securityManager()});
+        return factoryBean;
+    }
+    //redis配置------------------------------------------------------------------------------------------------------------------//
     @Bean
     public JedisManager jedisManager(){
         JedisManager jedisManager = new JedisManager();

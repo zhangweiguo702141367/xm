@@ -1,10 +1,10 @@
 package com.zh.dubbo.core.shiro.tooken;
 
+import com.zh.dubbo.entity.UUser;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
@@ -23,7 +23,8 @@ public class MyShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         System.out.print("enter doGetAuthorizationInfo");
-        return null;
+        SimpleAuthorizationInfo info =  new SimpleAuthorizationInfo();
+        return info;
 
     }
 
@@ -34,7 +35,14 @@ public class MyShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         System.out.print("enter doGetAuthenticationInfo");
-        return null;
+        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+        System.out.println("get token");
+        String name = token.getUsername();
+        String password = String.valueOf(token.getPassword());
+        UUser user = new UUser();
+        user.setPswd("11111");
+        user.setNickname("zhangsan");
+        return  new SimpleAuthenticationInfo(user, password, getName());
     }
     /**
      * 清空当前用户权限信息
