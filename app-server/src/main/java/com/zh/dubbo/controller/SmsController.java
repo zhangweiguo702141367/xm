@@ -1,8 +1,11 @@
 package com.zh.dubbo.controller;
 
 import com.github.pagehelper.PageInfo;
+import com.zh.dubbo.core.shiro.cache.VCache;
 import com.zh.dubbo.fo.ServiceFo;
 import com.zh.dubbo.untils.IPUtil;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,11 +23,18 @@ import java.util.Map;
 public class SmsController {
     @Autowired
     ServiceFo serviceFo;
-    @GetMapping("/test1")
+    @GetMapping("/login")
     public String test1(HttpServletRequest request){
+        Session session = SecurityUtils.getSubject().getSession();
+        String test1 = "login this request ip +"+ IPUtil.getIpAddr(request);
+//        VCache.set("zhangsan","saaa");
+        return VCache.get("zhangsan");
+    }
+    @GetMapping("/test1")
+    public String login(HttpServletRequest request){
 
-        System.out.println("this request ip +"+ IPUtil.getIpAddr(request));
-        return serviceFo.test1();
+        String result = "test1 this request ip +"+ IPUtil.getIpAddr(request);
+        return result;
     }
     @GetMapping("/sendSms")
     public String sendSms(){

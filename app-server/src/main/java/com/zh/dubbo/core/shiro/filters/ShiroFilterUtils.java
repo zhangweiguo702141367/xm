@@ -1,7 +1,7 @@
 package com.zh.dubbo.core.shiro.filters;
 
 
-
+import com.alibaba.dubbo.common.json.JSON;
 import com.zh.dubbo.utils.LoggerUtils;
 
 import javax.servlet.ServletRequest;
@@ -62,7 +62,8 @@ public class ShiroFilterUtils {
 		try {
 			response.setCharacterEncoding("UTF-8");
 			out = response.getWriter();
-			out.println(JSONObject.toJSONString(resultMap));
+//			out.println(JSONObject.toJSONString(resultMap));
+			out.println(JSON.json(response));
 		} catch (Exception e) {
 			LoggerUtils.fmtError(CLAZZ, e, "输出JSON报错。");
 		}finally{

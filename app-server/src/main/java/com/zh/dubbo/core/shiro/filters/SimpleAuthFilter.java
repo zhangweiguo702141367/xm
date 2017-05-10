@@ -1,6 +1,10 @@
 package com.zh.dubbo.core.shiro.filters;
 
 
+import com.alibaba.dubbo.common.json.JSON;
+import com.zh.dubbo.core.shiro.session.CustomSessionManager;
+import com.zh.dubbo.core.shiro.session.SessionStatus;
+import com.zh.dubbo.utils.LoggerUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;
@@ -88,7 +92,8 @@ public class SimpleAuthFilter extends AccessControlFilter {
 			throws IOException {
 		hresponse.setCharacterEncoding("UTF-8");
 		PrintWriter out = hresponse.getWriter();
-		out.println(JSONObject.toJSONString(resultMap));
+//		out.println(JSONObject.toJSONString(resultMap));
+		out.println(JSON.json(resultMap));
 		out.flush();
 		out.close();
 	}

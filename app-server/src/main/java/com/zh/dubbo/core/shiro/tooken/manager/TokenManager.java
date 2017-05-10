@@ -3,7 +3,8 @@ package com.zh.dubbo.core.shiro.tooken.manager;
 import com.zh.dubbo.core.shiro.session.CustomSessionManager;
 import com.zh.dubbo.core.shiro.tooken.MyShiroRealm;
 import com.zh.dubbo.core.shiro.tooken.ShiroToken;
-import com.zh.dubbo.utils.SpringUtil;
+import com.zh.dubbo.entity.UUser;
+import com.zh.dubbo.utils.SpringContextUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.SimplePrincipalCollection;
@@ -29,15 +30,15 @@ import java.util.List;
  */
 public class TokenManager {
 	//用户登录管理
-	public static final MyShiroRealm realm = SpringUtil.getBean("myShiroRealm", MyShiroRealm.class);
+	public static final MyShiroRealm realm = SpringContextUtil.getBean("myShiroRealm",MyShiroRealm.class);
 	//用户session管理
-	public static final CustomSessionManager customSessionManager = SpringUtil.getBean("customSessionManager",CustomSessionManager.class);
+	public static final CustomSessionManager customSessionManager = SpringContextUtil.getBean("customSessionManager",CustomSessionManager.class);
 	/**
 	 * 获取当前登录的用户User对象
 	 * @return
 	 */
-	public static User getToken(){
-		User token = (User) SecurityUtils.getSubject().getPrincipal();
+	public static UUser getToken(){
+		UUser token = (UUser) SecurityUtils.getSubject().getPrincipal();
 		return token ;
 	}
 	
@@ -97,7 +98,7 @@ public class TokenManager {
 	 * @param rememberMe
 	 * @return
 	 */
-	public static User login(User user,Boolean rememberMe){
+	public static UUser login(UUser user,Boolean rememberMe){
 		ShiroToken token = new ShiroToken(user.getEmail(), user.getPswd());
 		token.setRememberMe(rememberMe);
 		SecurityUtils.getSubject().login(token);

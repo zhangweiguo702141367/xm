@@ -2,7 +2,7 @@ package com.zh.dubbo.core.shiro.cache;
 
 
 import com.zh.dubbo.utils.SerializeUtil;
-import com.zh.dubbo.utils.SpringUtil;
+import com.zh.dubbo.utils.SpringContextUtil;
 import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import java.util.TreeSet;
 @SuppressWarnings("unchecked")
 public class VCache {
 
-	final static JedisManager J = SpringUtil.getBean("jedisManager", JedisManager.class);
+	final static JedisManager J = SpringContextUtil.getBean("jedisManager",JedisManager.class) ;
 	private VCache() {}
 	
 	/**

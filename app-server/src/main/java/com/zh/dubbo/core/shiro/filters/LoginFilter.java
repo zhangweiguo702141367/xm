@@ -1,6 +1,8 @@
 package com.zh.dubbo.core.shiro.filters;
 
 
+import com.zh.dubbo.core.shiro.tooken.manager.TokenManager;
+import com.zh.dubbo.entity.UUser;
 import com.zh.dubbo.utils.LoggerUtils;
 import org.apache.shiro.web.filter.AccessControlFilter;
 
@@ -33,8 +35,8 @@ public class LoginFilter  extends AccessControlFilter {
 	@Override
 	protected boolean isAccessAllowed(ServletRequest request,
 			ServletResponse response, Object mappedValue) throws Exception {
-		
-		User token = TokenManager.getToken();
+
+		UUser token = TokenManager.getToken();
 		
 		if(null != token || isLoginRequest(request, response)){// && isEnabled()
             return Boolean.TRUE;

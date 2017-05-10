@@ -1,7 +1,7 @@
 package com.zh.dubbo.core.shiro;
 
-import com.boot.core.shiro.session.ShiroSessionRepository;
-import com.boot.utils.LoggerUtils;
+import com.zh.dubbo.core.shiro.session.ShiroSessionRepository;
+import com.zh.dubbo.utils.LoggerUtils;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.session.UnknownSessionException;
 import org.apache.shiro.session.mgt.eis.AbstractSessionDAO;

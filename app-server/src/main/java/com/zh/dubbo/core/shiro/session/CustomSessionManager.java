@@ -2,6 +2,8 @@ package com.zh.dubbo.core.shiro.session;
 
 
 import com.zh.dubbo.core.shiro.CustomShiroSessionDAO;
+import com.zh.dubbo.entity.UUser;
+import com.zh.dubbo.entity.UserOnlineBo;
 import com.zh.dubbo.utils.LoggerUtils;
 import com.zh.dubbo.utils.StringUtils;
 import org.apache.shiro.session.Session;
@@ -81,8 +83,8 @@ public class CustomSessionManager {
 				SimplePrincipalCollection spc = (SimplePrincipalCollection)obj;
 				//判断用户，匹配用户ID。
 				obj = spc.getPrimaryPrincipal();
-				if(null != obj && obj instanceof User){
-					User user = (User)obj;
+				if(null != obj && obj instanceof UUser){
+					UUser user = (UUser)obj;
 					//比较用户ID，符合即加入集合
 					if(null != user && idset.contains(user.getId())){
 						list.add(spc);
@@ -119,9 +121,9 @@ public class CustomSessionManager {
 			 * return new SimpleAuthenticationInfo(user,user.getPswd(), getName());的user 对象。
 			 */
 			obj = spc.getPrimaryPrincipal();
-			if(null != obj && obj instanceof User){
+			if(null != obj && obj instanceof UUser){
 				//存储session + user 综合信息
-				UserOnlineBo userBo = new UserOnlineBo((User)obj);
+				UserOnlineBo userBo = new UserOnlineBo((UUser)obj);
 				//最后一次和系统交互的时间
 				userBo.setLastAccess(session.getLastAccessTime());
 				//主机的ip地址

@@ -1,6 +1,6 @@
 package com.zh.dubbo.core.shiro.filters;
 
-import com.alibaba.dubbo.common.json.JSONObject;
+import com.alibaba.dubbo.common.json.JSON;
 import com.zh.dubbo.core.shiro.cache.VCache;
 import com.zh.dubbo.core.shiro.session.ShiroSessionRepository;
 import com.zh.dubbo.core.shiro.tooken.manager.TokenManager;
@@ -149,7 +149,7 @@ public class KickoutSessionFilter extends AccessControlFilter {
 			hresponse.setCharacterEncoding("UTF-8");
 			PrintWriter out = hresponse.getWriter();
 //			out.println(JSONObject.toJSONString(resultMap));
-			out.println(JSONObject.toJSONString(resultMap));
+			out.println(JSON.json(resultMap));
 			out.flush();
 			out.close();
 		} catch (Exception e) {
