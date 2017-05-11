@@ -79,7 +79,7 @@ public class ShiroConfig {
         chains.put("/logout", "logout");
         chains.put("/unauthorized", "anon");
         chains.put("/favicon*", "anon");
-        chains.put("/**", "login,kickout");
+//        chains.put("/**", "login,kickout");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(chains);
         //设置filters
         Map<String, Filter> filters = new LinkedHashMap<String,Filter>();

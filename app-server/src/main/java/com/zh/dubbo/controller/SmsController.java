@@ -2,7 +2,9 @@ package com.zh.dubbo.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.zh.dubbo.core.shiro.cache.VCache;
+import com.zh.dubbo.entity.SysPermissionInit;
 import com.zh.dubbo.fo.ServiceFo;
+import com.zh.dubbo.fo.UserServiceFo;
 import com.zh.dubbo.untils.IPUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +25,8 @@ import java.util.Map;
 public class SmsController {
     @Autowired
     ServiceFo serviceFo;
+    @Autowired
+    UserServiceFo userServiceFo;
     @GetMapping("/login")
     public String test1(HttpServletRequest request){
         try {
@@ -33,9 +38,10 @@ public class SmsController {
         return "login success";
     }
     @GetMapping("/unauthorized")
-    public String unauthorized(HttpServletRequest request){
+    public List<SysPermissionInit> unauthorized(HttpServletRequest request){
 //        VCache.set("zhangsan","saaa");
-        return "unauthorized";
+        return userServiceFo.getAllSysPermissions();
+//        return "unauthorized";
     }
     @GetMapping("/test1")
     public String login(HttpServletRequest request){
