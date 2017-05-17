@@ -159,7 +159,11 @@
 			<artifactId>fastjson</artifactId>
 			<version>1.2.31</version>
 		</dependency>
-
+		<dependency>
+			<groupId>com.zh</groupId>
+			<artifactId>commonutil</artifactId>
+			<version>1.0.3</version>
+		</dependency>
 		<!--httpclient pools start-->
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>

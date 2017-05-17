@@ -1,6 +1,7 @@
 package com.zh.dao;
 
 import com.zh.entity.SysBaiDuConfig;
+import com.zh.entity.SysBaiduLog;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
@@ -23,4 +24,7 @@ public interface CommonDao {
     })
     @Select("SELECT * FROM zh_system.sys_baidu_conf WHERE nid =#{nid}")
     SysBaiDuConfig getConfByNid(@Param("nid") String nid);
+
+    @Insert("INSERT INTO zh_system.sys_baidu_log(ip,resp,province,city,city_code,point_x,point_y,create_time,member_id) VALUES(#{ip},#{resp},#{province},#{city},#{city_code},#{point_x},#{point_y},#{createTime},#{memberId})")
+    int insertBaiDuLog(SysBaiduLog sysBaiduLog);
 }

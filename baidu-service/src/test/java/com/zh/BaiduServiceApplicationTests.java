@@ -19,9 +19,9 @@ public class BaiduServiceApplicationTests {
 	public void contextLoads() {
 		Map<String,Object> params = new HashMap<>();
 		params.put("member_id","123");
-		params.put("ip","106.39.84.154");
+		params.put("ip","223.72.71.218");
 		try {
-			baiDuMapService.getLocationByIP(params);
+			System.out.println(baiDuMapService.getLocationByIP(params));
 		}catch (Exception e){
 
 		}
