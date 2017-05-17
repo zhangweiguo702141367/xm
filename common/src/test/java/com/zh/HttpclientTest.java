@@ -18,9 +18,12 @@ public class HttpclientTest {
     }
     @Test
     public void postTest(){
-        String postUrl = "http://wecar.qq.com/api/askprice/getprovinceandcity";
+        //        https://api.map.baidu.com/location/ip/?ip=106.39.84.154&output=json&ak=5wim9Xj10uGHkX2as8td5IcalCyGdmb2&sn=f87bddac8043fd85f2d5f069a599361d
+        String postUrl = "https://api.map.baidu.com/location/ip";
+        //String postUrl = "http://wecar.qq.com/api/askprice/getprovinceandcity";
         Map<String,Object> params = new HashMap<String,Object>();
         params.put("ip","223.72.64.105");
+        params.put("ak","5wim9Xj10uGHkX2as8td5IcalCyGdmb2");
         System.out.println("this is a test for postUrl");
         try {
             System.out.println("here====="+HttpClientUtil.post(postUrl,params));
