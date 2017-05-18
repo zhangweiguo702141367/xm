@@ -4,11 +4,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.zh</groupId>
-	<artifactId>weather-servvice</artifactId>
+	<artifactId>weather-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>weather-servvice</name>
+	<name>weather-service</name>
 	<description>this is a service for weather</description>
 
 	<parent>

@@ -404,3 +404,14 @@ CREATE TABLE `sys_sms_template` (
 -- Records of sys_sms_template
 -- ----------------------------
 INSERT INTO `sys_sms_template` VALUES ('1', 'register', '注册成功后发送', '尊敬的用户，您的本次验证码是：${code}，请勿将验证码转告他人。如非本人操作，请致电：18811328493', '1493825028', '1');
+
+DROP TABLE IF EXISTS 'sys_weather_code'
+CREATE TABLE `sys_weather_code` (
+  `id` int(12) NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `citycode` varchar(32) NOT NULL COMMENT '城市代码',
+  `cityname` varchar(32) NOT NULL COMMENT '城市名字',
+  `pinyin` varchar(20) NOT NULL COMMENT '城市对应的拼音',
+  `province` varchar(32) NOT NULL COMMENT '所在省份',
+  `create_time` int(12) NOT NULL COMMENT '添加时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='天气预报城市编码';
