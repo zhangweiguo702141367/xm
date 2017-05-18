@@ -1,15 +1,14 @@
 package com.zh;
 
-import com.zh.manage.citycode.CityCodeService;
-import com.zh.manage.json.OpenWeatherService;
-import com.zh.manage.xml.OpenWeatherXmlService;
+import com.zh.dubbo.manage.citycode.CityCodeService;
+import com.zh.dubbo.manage.json.OpenWeatherService;
+import com.zh.dubbo.manage.xml.OpenWeatherXmlService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
 import java.util.Map;
 
 @RunWith(SpringRunner.class)
