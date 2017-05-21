@@ -1,6 +1,7 @@
 package com.zh.dubbo.untils;
 
 import com.zh.dubbo.constant.Constants;
+import com.zh.dubbo.entity.Config;
 
 import java.beans.BeanInfo;
 import java.beans.Introspector;
@@ -276,5 +277,27 @@ public class StringUtils {
                     template = template.replaceAll("\\$\\{"+key+"\\}",params.get(key).toString());
             }
             return template;
+    }
+
+    /**
+     * 根据配置项nid从配置项列表中获取其值
+     * @param configs
+     * @param nid
+     * @return
+     * @throws Exception
+     */
+    public static String getConfFromList(List<Config> configs,String nid) throws Exception{
+        if(configs == null || configs.size() == 0){
+            throw new Exception("参数列表不能为空！");
+        }
+        if(nid == null || "".equals(nid)){
+            throw new Exception("当前获取的置名称不能为空！");
+        }
+        for (Config config:configs) {
+            if(nid.equals(config.getNid())){
+                return config.getValue();
+            }
+        }
+        throw new Exception("未获取到要查询的配置项信息");
     }
 }
