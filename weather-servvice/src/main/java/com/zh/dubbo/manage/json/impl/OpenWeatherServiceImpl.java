@@ -1,8 +1,14 @@
 package com.zh.dubbo.manage.json.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.zh.dubbo.dao.WeatherLogDao;
+import com.zh.dubbo.entity.WeatherLog;
 import com.zh.dubbo.manage.json.OpenWeatherService;
+import com.zh.dubbo.untils.DateUtil;
 import com.zh.dubbo.utils.HttpClientUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +22,11 @@ import java.util.Map;
 public class OpenWeatherServiceImpl implements OpenWeatherService{
     @Value("${weather.json.url}")
     private String waetherUrl;
+    @Autowired
+    WeatherLogDao weatherLogDao;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Override
-    public Map<String, Object> getWeatherByCityCode(String citycode) throws Exception {
+    public Map<String, Object> getWeatherByCityCode(String citycode,String requestId) throws Exception {
         if(citycode == null || "".equals(citycode)){
             throw new Exception("城市编码获取失败！");
         }
@@ -27,7 +36,14 @@ public class OpenWeatherServiceImpl implements OpenWeatherService{
         StringBuffer sb = new StringBuffer();
         sb.append(waetherUrl).append("?citykey=").append(citycode);
 //        Map<String,Object> params = new HashMap<>();
+        WeatherLog weatherLog = new WeatherLog();
+        weatherLog.setRequestFunction("getWeatherByCityCode");
+        weatherLog.setRequestId(Integer.valueOf(requestId));
+        weatherLog.setRequestParam("citykey="+citycode);
+        weatherLog.setCreateTime(DateUtil.getCurrentTime());
+        try{
         String result = HttpClientUtil.get(sb.toString());
+        weatherLog.setResp(result);
         System.out.println("resultcitycode===="+result);
         if(result == null || "".equals(result)){
             throw new Exception("请求数据获取异常!");
@@ -48,10 +64,19 @@ public class OpenWeatherServiceImpl implements OpenWeatherService{
         }
         System.out.println(JSONObject.parse(result));
         return (Map)params.get("data");
+    }catch (Exception e){
+        throw new Exception(e.getMessage());
+    }finally {
+        try {
+            weatherLogDao.insertWeatherLog(weatherLog);
+        }catch (Exception e1){
+            logger.error(e1.getMessage());
+        }
     }
+}
 
     @Override
-    public Map<String, Object> getWeatherByCityName(String cityName) throws Exception {
+    public Map<String, Object> getWeatherByCityName(String cityName,String requestId) throws Exception {
         if(cityName == null || "".equals(cityName)){
             throw new Exception("城市地址获取失败！");
         }
@@ -60,7 +85,14 @@ public class OpenWeatherServiceImpl implements OpenWeatherService{
         }
         StringBuffer sb = new StringBuffer();
         sb.append(waetherUrl).append("?city=").append(cityName);
+        WeatherLog weatherLog = new WeatherLog();
+        weatherLog.setRequestFunction("getWeatherByCityName");
+        weatherLog.setRequestId(Integer.valueOf(requestId));
+        weatherLog.setRequestParam("citykey="+cityName);
+        weatherLog.setCreateTime(DateUtil.getCurrentTime());
+        try{
         String result = HttpClientUtil.get(sb.toString());
+        weatherLog.setResp(result);
         System.out.println("resultcityname===="+result);
         if(result == null || "".equals(result)){
             throw new Exception("请求数据获取异常!");
@@ -81,5 +113,14 @@ public class OpenWeatherServiceImpl implements OpenWeatherService{
         }
         System.out.println(JSONObject.parse(result));
         return (Map)params.get("data");
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }finally {
+            try {
+                weatherLogDao.insertWeatherLog(weatherLog);
+            }catch (Exception e1){
+                logger.error(e1.getMessage());
+            }
+        }
     }
 }

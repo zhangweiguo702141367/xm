@@ -21,28 +21,28 @@ public class WeatherServiceImpl implements WeatherService {
     @Autowired
     CityCodeService cityCodeService;
     @Override
-    public Map<String, Object> getWeatherByCityCode(String citycode) throws Exception {
-        return openWeatherService.getWeatherByCityCode(citycode);
+    public Map<String, Object> getWeatherByCityCode(String citycode,String requestId) throws Exception {
+        return openWeatherService.getWeatherByCityCode(citycode,requestId);
     }
 
     @Override
-    public Map<String, Object> getWeatherByCityName(String cityName) throws Exception {
-        return openWeatherService.getWeatherByCityName(cityName);
+    public Map<String, Object> getWeatherByCityName(String cityName,String requestId) throws Exception {
+        return openWeatherService.getWeatherByCityName(cityName,requestId);
     }
 
     @Override
-    public Map<String, Object> getWeatherXmlByCityCode(String citycode) throws Exception {
-        return openWeatherXmlService.getWeatherXmlByCityCode(citycode);
+    public Map<String, Object> getWeatherXmlByCityCode(String citycode,String requestId) throws Exception {
+        return openWeatherXmlService.getWeatherXmlByCityCode(citycode,requestId);
     }
 
     @Override
-    public Map<String, Object> getWeatherXmlByCityName(String cityName) throws Exception {
-        return openWeatherXmlService.getWeatherXmlByCityName(cityName);
+    public Map<String, Object> getWeatherXmlByCityName(String cityName,String requestId) throws Exception {
+        return openWeatherXmlService.getWeatherXmlByCityName(cityName,requestId);
     }
 
     @Override
-    public String getCityCodeByProvinceAndCity(String province, String city) throws Exception {
-        return cityCodeService.getCityCodeByProvinceAndCity(province,city);
+    public String getCityCodeByProvinceAndCity(String province, String city,String requestId) throws Exception {
+        return cityCodeService.getCityCodeByProvinceAndCity(province,city,requestId);
     }
 
     @Override

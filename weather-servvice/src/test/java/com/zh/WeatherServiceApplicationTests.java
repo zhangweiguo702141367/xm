@@ -24,7 +24,7 @@ public class WeatherServiceApplicationTests {
 	@Test
 	public void contextLoads() {
 		try {
-			System.out.println(openWeatherService.getWeatherByCityCode("101010100"));
+			System.out.println(openWeatherService.getWeatherByCityCode("101010100","12345"));
 		}catch (Exception e){
 			System.out.println(e.getMessage());
 		}
@@ -33,7 +33,7 @@ public class WeatherServiceApplicationTests {
     @Test
 	public void getWeatherByCityName(){
 		try{
-			System.out.println(openWeatherService.getWeatherByCityName("北京市"));
+			System.out.println(openWeatherService.getWeatherByCityName("北京市","12346"));
 		}catch (Exception e){
 			System.out.println(e.getMessage());
 		}
@@ -41,7 +41,7 @@ public class WeatherServiceApplicationTests {
 	@Test
 	public void getWeatherXmlByCityName(){
 		try{
-			Map result = openWeatherXmlService.getWeatherXmlByCityName("北京市");
+			Map result = openWeatherXmlService.getWeatherXmlByCityName("北京市","12347");
 //			List<Map<String,Object>> zhishus = (List<Map<String,Object>>) result.get("zhishus");
 //			for (Map zhishu:zhishus) {
 				System.out.println(result);
@@ -53,7 +53,7 @@ public class WeatherServiceApplicationTests {
 	@Test
 	public void getWeatherXmlByCityCode(){
 		try{
-			System.out.println(openWeatherXmlService.getWeatherXmlByCityCode("101010100"));
+			System.out.println(openWeatherXmlService.getWeatherXmlByCityCode("101010100","12348"));
 		}catch (Exception e){
 			System.out.println(e.getMessage());
 		}

@@ -12,7 +12,7 @@ public interface WeatherService {
      * @return
      * @throws Exception
      */
-    public Map<String,Object> getWeatherByCityCode(String citycode) throws Exception;
+    public Map<String,Object> getWeatherByCityCode(String citycode,String requestId) throws Exception;
 
     /**
      * 根据城市名字获取当前天气情况JSON形式
@@ -20,14 +20,14 @@ public interface WeatherService {
      * @return
      * @throws Exception
      */
-    public  Map<String,Object> getWeatherByCityName(String cityName) throws Exception;
+    public  Map<String,Object> getWeatherByCityName(String cityName,String requestId) throws Exception;
     /**
      * 通过城市编码获取当前天气情况XML形式
      * @param citycode
      * @return
      * @throws Exception
      */
-    public Map<String,Object> getWeatherXmlByCityCode(String citycode) throws Exception;
+    public Map<String,Object> getWeatherXmlByCityCode(String citycode,String requestId) throws Exception;
 
     /**
      * 根据城市名字获取当前天气情况XML形式
@@ -35,7 +35,7 @@ public interface WeatherService {
      * @return
      * @throws Exception
      */
-    public  Map<String,Object> getWeatherXmlByCityName(String cityName) throws Exception;
+    public  Map<String,Object> getWeatherXmlByCityName(String cityName,String requestId) throws Exception;
 
     /**
      * 根据省份 城市获取城市代码
@@ -44,7 +44,7 @@ public interface WeatherService {
      * @return
      * @throws Exception
      */
-    public String getCityCodeByProvinceAndCity(String province,String city) throws Exception;
+    public String getCityCodeByProvinceAndCity(String province,String city,String requestId) throws Exception;
     /**
      * 定时任务更新城市代码(定时每一个月更新一次)
      * @return

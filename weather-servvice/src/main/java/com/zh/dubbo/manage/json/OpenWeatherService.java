@@ -12,7 +12,7 @@ public interface OpenWeatherService {
      * @return
      * @throws Exception
      */
-    public Map<String,Object> getWeatherByCityCode(String citycode) throws Exception;
+    public Map<String,Object> getWeatherByCityCode(String citycode,String requestId) throws Exception;
 
     /**
      * 根据城市名字获取当前天气情况
@@ -20,5 +20,5 @@ public interface OpenWeatherService {
      * @return
      * @throws Exception
      */
-    public  Map<String,Object> getWeatherByCityName(String cityName) throws Exception;
+    public  Map<String,Object> getWeatherByCityName(String cityName,String requestId) throws Exception;
 }

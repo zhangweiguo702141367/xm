@@ -12,7 +12,7 @@ public interface OpenWeatherXmlService {
      * @return
      * @throws Exception
      */
-    public Map<String,Object> getWeatherXmlByCityCode(String citycode) throws Exception;
+    public Map<String,Object> getWeatherXmlByCityCode(String citycode,String requestId) throws Exception;
 
     /**
      * 根据城市名字获取当前天气情况
@@ -20,5 +20,5 @@ public interface OpenWeatherXmlService {
      * @return
      * @throws Exception
      */
-    public  Map<String,Object> getWeatherXmlByCityName(String cityName) throws Exception;
+    public  Map<String,Object> getWeatherXmlByCityName(String cityName,String requestId) throws Exception;
 }

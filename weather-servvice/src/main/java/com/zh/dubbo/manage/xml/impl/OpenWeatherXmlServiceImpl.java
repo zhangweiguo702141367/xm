@@ -1,15 +1,20 @@
 package com.zh.dubbo.manage.xml.impl;
 
+import com.zh.dubbo.dao.WeatherLogDao;
+import com.zh.dubbo.entity.WeatherLog;
 import com.zh.dubbo.manage.xml.OpenWeatherXmlService;
+import com.zh.dubbo.untils.DateUtil;
 import com.zh.dubbo.untils.xml.XmlUtils;
 import com.zh.dubbo.utils.HttpClientUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import java.util.*;
-
 /**
  * Created by Administrator on 2017/5/18.
  */
@@ -17,8 +22,11 @@ import java.util.*;
 public class OpenWeatherXmlServiceImpl implements OpenWeatherXmlService {
     @Value("${weather.xml.url}")
     private String waetherXmlUrl;
+    @Autowired
+    WeatherLogDao weatherLogDao;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Override
-    public Map<String, Object> getWeatherXmlByCityCode(String citycode) throws Exception {
+    public Map<String, Object> getWeatherXmlByCityCode(String citycode,String requestId) throws Exception {
         if(citycode == null || "".equals(citycode)){
             throw new Exception("城市编码获取失败！");
         }
@@ -28,8 +36,15 @@ public class OpenWeatherXmlServiceImpl implements OpenWeatherXmlService {
         StringBuffer sb = new StringBuffer();
         sb.append(waetherXmlUrl).append("?citykey=").append(citycode);
 //        Map<String,Object> params = new HashMap<>();
+        WeatherLog weatherLog = new WeatherLog();
+        weatherLog.setRequestFunction("getWeatherXmlByCityCode");
+        weatherLog.setRequestId(Integer.valueOf(requestId));
+        weatherLog.setRequestParam("citykey="+citycode);
+        weatherLog.setCreateTime(DateUtil.getCurrentTime());
+        try{
         String result = HttpClientUtil.get(sb.toString());
-        System.out.println("resultcitycode===="+result);
+        weatherLog.setResp(result);
+        System.out.println("resultcitycode====" + result);
         Element root = XmlUtils.getRootElementFromString(result);
         Element forecast = XmlUtils.getChildElement(root,"forecast");
         List<Element> weathers = XmlUtils.getChildElements(forecast);
@@ -79,10 +94,19 @@ public class OpenWeatherXmlServiceImpl implements OpenWeatherXmlService {
         response.put("pm25",pm);
         response.put("quality",wuran);
         return response;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }finally {
+            try {
+                weatherLogDao.insertWeatherLog(weatherLog);
+            }catch (Exception e1){
+                logger.error(e1.getMessage());
+            }
+        }
     }
 
     @Override
-    public Map<String, Object> getWeatherXmlByCityName(String cityName) throws Exception {
+    public Map<String, Object> getWeatherXmlByCityName(String cityName,String requestId) throws Exception {
         if(cityName == null || "".equals(cityName)){
             throw new Exception("城市地址获取失败！");
         }
@@ -91,7 +115,14 @@ public class OpenWeatherXmlServiceImpl implements OpenWeatherXmlService {
         }
         StringBuffer sb = new StringBuffer();
         sb.append(waetherXmlUrl).append("?city=").append(cityName);
+        WeatherLog weatherLog = new WeatherLog();
+        weatherLog.setRequestFunction("getWeatherXmlByCityName");
+        weatherLog.setRequestId(Integer.valueOf(requestId));
+        weatherLog.setRequestParam("citykey="+cityName);
+        weatherLog.setCreateTime(DateUtil.getCurrentTime());
+        try{
         String result = HttpClientUtil.get(sb.toString());
+        weatherLog.setResp(result);
         System.out.println("resultcityname===="+result);
         Element root = XmlUtils.getRootElementFromString(result);
         Element forecast = XmlUtils.getChildElement(root,"forecast");
@@ -142,6 +173,15 @@ public class OpenWeatherXmlServiceImpl implements OpenWeatherXmlService {
         response.put("pm25",pm);
         response.put("quality",wuran);
         return response;
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }finally {
+            try {
+                weatherLogDao.insertWeatherLog(weatherLog);
+            }catch (Exception e1){
+                logger.error(e1.getMessage());
+            }
+        }
     }
     /**
      * @param element
