@@ -41,8 +41,8 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
-    public String getCityCodeByProvinceAndCity(String province, String city,String requestId) throws Exception {
-        return cityCodeService.getCityCodeByProvinceAndCity(province,city,requestId);
+    public String getCityCodeByProvinceAndCity(String province, String city) throws Exception {
+        return cityCodeService.getCityCodeByProvinceAndCity(province,city);
     }
 
     @Override

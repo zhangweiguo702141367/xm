@@ -44,7 +44,7 @@ public interface WeatherService {
      * @return
      * @throws Exception
      */
-    public String getCityCodeByProvinceAndCity(String province,String city,String requestId) throws Exception;
+    public String getCityCodeByProvinceAndCity(String province,String city) throws Exception;
     /**
      * 定时任务更新城市代码(定时每一个月更新一次)
      * @return
