@@ -14,6 +14,8 @@ import com.zh.dubbo.manage.alibaba.SmsSendAliService;
 import com.zh.dubbo.manage.common.CommonService;
 import com.zh.dubbo.untils.DateUtil;
 import com.zh.dubbo.untils.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,18 +37,18 @@ public class SmsSendAliServiceImpl implements SmsSendAliService{
     private SmsSendDao smsSendDao;
     @Autowired
     private CommonService commonService;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Override
     public Map<String, Object> sendCodeSMS(Map<String, Object> params) throws Exception {
-        System.out.println("enter there");
         if(params == null || params.size() == 0){
             throw new Exception("参数列表不能为空");
         }
         if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
             throw new Exception("手机号码不能为空");
         }
-        if(params.get("sms_template_id") == null || "".equals(params.get("sms_template_id").toString())){
-            throw  new Exception("短信模板不能为空");
-        }
+//        if(params.get("sms_template_id") == null || "".equals(params.get("sms_template_id").toString())){
+//            throw  new Exception("短信模板不能为空");
+//        }
         if(env == null){
             throw new Exception("环境配置不能为空");
         }
@@ -54,7 +56,7 @@ public class SmsSendAliServiceImpl implements SmsSendAliService{
             throw new Exception("模版名称不能为空！");
         }
         //模版nid
-        String template_nid = params.get("sms_template_nid").toString();
+        String template_nid = "alibaba_"+params.get("sms_template_nid").toString();
         SmsTemplate smsTemplate = commonService.getTemplateByNid(template_nid);
         if(smsTemplate == null){
             throw new Exception("获取模版异常！");
@@ -73,7 +75,7 @@ public class SmsSendAliServiceImpl implements SmsSendAliService{
             logMsg = StringUtils.replaceMap(logMsg,templateParam);
         }
         //阿里短信模板id
-        String sms_tempalteId = params.get("sms_template_id").toString();
+        String sms_tempalteId = smsTemplate.getSmsTemplateId();
         //发送短信手机号
         String mobile = params.get("mobile_phone").toString();
         List<SmsConfig> configs = commonService.getConfigList(env);
@@ -113,11 +115,10 @@ public class SmsSendAliServiceImpl implements SmsSendAliService{
                 smsLog.setStatus(2);
             }
             smsSendDao.insertSmsLog(smsLog);
-            System.out.println(rsp.getBody());
         }catch(Exception e){
-            System.out.println(e.getMessage());
             smsLog.setStatus(2);
             smsSendDao.insertSmsLog(smsLog);
+            throw new Exception("短信发送失败！");
         }
         return null;
     }

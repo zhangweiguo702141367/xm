@@ -7,6 +7,8 @@ import com.zh.entity.SysBaiDuConfig;
 import com.zh.entity.SysBaiduLog;
 import com.zh.manage.baiduMap.BaiDuMapService;
 import com.zh.utils.HttpClientUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import java.util.*;
 public class BaiDuMapServiceImpl implements BaiDuMapService {
     @Autowired
     CommonDao commonDao;
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Override
     public Map<String, Object> getLocationByIP(Map<String, Object> params) throws Exception {
         Map<String,Object> respMap = new HashMap<>();
@@ -58,7 +61,7 @@ public class BaiDuMapServiceImpl implements BaiDuMapService {
             data.put("ak",ak);
             String result = HttpClientUtil.post(bdurl,data);
             Map ss = (Map) JSONObject.parse(result);
-            System.out.println("start ===="+JSONObject.toJSONString(ss));
+            logger.info("start ===="+JSONObject.toJSONString(ss));
             //Map<String,Object> resultMap =(Map<String,Object>) JSON.parse(result);
             Map content = (Map)ss.get("content");
             Map address_detail = (Map)content.get("address_detail");
@@ -84,13 +87,13 @@ public class BaiDuMapServiceImpl implements BaiDuMapService {
                     int logId = commonDao.insertBaiDuLog(sysBaiduLog);
                     System.out.println("logId==="+logId);
                 }catch (Exception e){
-                    System.out.println(e.getMessage());
+                    logger.error(e.getMessage());
                 }finally {
-                    System.out.println("百度地址插入数据"+sysBaiduLog.toString());
+                    logger.info("百度地址插入数据"+sysBaiduLog.toString());
                 }
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            logger.error(e.getMessage());
             throw new Exception("获取百度配置失败");
         }
         return respMap;

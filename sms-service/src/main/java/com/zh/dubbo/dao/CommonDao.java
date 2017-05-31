@@ -21,7 +21,9 @@ public interface CommonDao {
     })
     @Select("SELECT * FROM zh_system.sys_sms_conf WHERE nid LIKE CONCAT(#{type},'%')")
     List<SmsConfig> getConfigList(@Param("type") String type);
-
+    @Results({
+            @Result(property = "smsTemplateId", column = "sms_template_id"),
+    })
     @Select("SELECT * FROM sys_sms_template WHERE nid=#{nid}")
     SmsTemplate getSmsTemplateByNid(@Param("nid") String nid);
 

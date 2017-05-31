@@ -15,17 +15,19 @@ public class SmsTemplate implements Serializable {
     private String msg;
     private Long createTime;
     private int status;
+    private String smsTemplateId;
     public SmsTemplate(){
         super();
     }
 
-    public SmsTemplate(int id, String nid, String desc, String msg, Long createTime, int status) {
+    public SmsTemplate(int id, String nid, String desc, String msg, Long createTime, int status, String smsTemplateId) {
         this.id = id;
         this.nid = nid;
         this.desc = desc;
         this.msg = msg;
         this.createTime = createTime;
         this.status = status;
+        this.smsTemplateId = smsTemplateId;
     }
 
     public int getId() {
@@ -76,6 +78,14 @@ public class SmsTemplate implements Serializable {
         this.status = status;
     }
 
+    public String getSmsTemplateId() {
+        return smsTemplateId;
+    }
+
+    public void setSmsTemplateId(String smsTemplateId) {
+        this.smsTemplateId = smsTemplateId;
+    }
+
     @Override
     public String toString() {
         return "SmsTemplate{" +
@@ -85,6 +95,7 @@ public class SmsTemplate implements Serializable {
                 ", msg='" + msg + '\'' +
                 ", createTime=" + createTime +
                 ", status=" + status +
+                ", smsTemplateId='" + smsTemplateId + '\'' +
                 '}';
     }
 }

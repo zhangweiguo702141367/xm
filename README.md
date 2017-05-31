@@ -14,11 +14,11 @@
 >>
 >>>jetty-port 20003
 >>>
->>>dubbo-port 20004
+>>>dubbo-port 20005
 
 >>baidu-service 百度地图服务
 >>
->>>jetty-port 20005
+>>>jetty-port 19999
 >>>
 >>>dubbo-port 20006
 
