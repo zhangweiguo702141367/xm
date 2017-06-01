@@ -42,6 +42,12 @@ public class MemberServiceImpl implements MemberService {
         if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
             throw new Exception("注册手机号不能为空");
         }
+        if(params.get("salt") == null || "".equals(params.get("salt").toString())){
+            throw new Exception("加密盐不能为空！");
+        }
+        if(params.get("password") == null || "".equals(params.get("password").toString())){
+            throw new Exception("登录密码不能为空！");
+        }
         String mobilePhone = params.get("mobile_phone").toString();
         //正则校验手机号格式
         UUID spread_id = UUID.randomUUID();
@@ -49,6 +55,8 @@ public class MemberServiceImpl implements MemberService {
         String spreadID = spreadId.substring(0, 8) + spreadId.substring(9, 13) + spreadId.substring(14, 18) + spreadId.substring(19, 23) + spreadId.substring(24);
         Map<String,Object> member = new HashMap<>();
         member.put("userId",params.get("user_id"));
+        member.put("salt",params.get("salt").toString());
+        member.put("password",params.get("password").toString());
         member.put("loginName",mobilePhone);
         member.put("nickName",nickName);
         member.put("mobilePhone",mobilePhone);

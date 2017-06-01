@@ -30,10 +30,12 @@ public class UserServiceApplicationTests {
 	@Test
 	public void createUser(){
 		Map<String,Object> params = new HashMap<>();
-		params.put("user_id","19921001");
-		params.put("nick_name","xiaomei");
+		params.put("user_id","19921002");
+		params.put("nick_name","bendan");
 		params.put("login_ip","127.0.0.1");
-		params.put("mobile_phone","18811328493");
+		params.put("mobile_phone","18234126877");
+		params.put("password","a123123");
+		params.put("salt","11");
 
 		try {
 			int member_id = memberService.insertUser(params);

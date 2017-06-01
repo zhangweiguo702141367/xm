@@ -16,8 +16,8 @@ public interface MemberDao {
     @Insert("INSERT INTO zh_member.mb_login_log(member_id,login_time,login_date,login_ip,add_time) VALUES(#{memberId},#{loginTime},#{loginDate},#{loginIp},#{addTime})")
     public int insertLoginLog(Map<String, Object> login);
 
-    @Insert("INSERT INTO zh_member.mb_member(user_id,login_name,nick_name,mobile_phone,head_image,is_mobile,is_eamil,is_identity,last_login_time,last_login_date,register_time,register_date,spread_id,role_id,add_time) VALUES(" +
-                                                  "#{userId},#{loginName},#{nickName},#{mobilePhone},#{headImage},#{isMobile},#{isEamil},#{isIdentity},#{lastLoginTime},#{lastLoginDate},#{registerTime},#{registerDate},#{spreadId},#{roleId},#{addTime})")
+    @Insert("INSERT INTO zh_member.mb_member(user_id,login_name,password,salt,nick_name,mobile_phone,head_image,is_mobile,is_eamil,is_identity,last_login_time,last_login_date,register_time,register_date,spread_id,role_id,add_time) VALUES(" +
+                                                  "#{userId},#{loginName},#{password},#{salt},#{nickName},#{mobilePhone},#{headImage},#{isMobile},#{isEamil},#{isIdentity},#{lastLoginTime},#{lastLoginDate},#{registerTime},#{registerDate},#{spreadId},#{roleId},#{addTime})")
     @Options(useGeneratedKeys = true, keyProperty = "memberId", keyColumn = "id")
     public int insertMember(Map<String,Object> member);
 

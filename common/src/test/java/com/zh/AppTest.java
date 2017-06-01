@@ -1,5 +1,6 @@
 package com.zh;
 
+import com.zh.dubbo.untils.security.MD5Util;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -35,4 +36,5 @@ public class AppTest
     {
         assertTrue( true );
     }
+
 }

@@ -1,6 +1,8 @@
 package com.zh;
 
 import com.zh.dubbo.untils.DateUtil;
+import com.zh.dubbo.untils.security.MD5Util;
+import com.zh.dubbo.untils.security.SHAUtil;
 import org.junit.Test;
 
 import java.util.Date;
@@ -41,4 +43,15 @@ public class DateTest {
         System.out.println("///////////////////////////");
 
     }
+    @Test
+    public void md5()throws Exception{
+        String ss = MD5Util.md5Encode("zhangsan");
+        System.out.println(ss);
+    }
+    @Test
+    public void SHA()throws Exception{
+        String pwd = SHAUtil.getPwd("zhangweiguo","qw1t2s",5);
+        System.out.println("pwd======"+pwd);
+    }
+
 }
