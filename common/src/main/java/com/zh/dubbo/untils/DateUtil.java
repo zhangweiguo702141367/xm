@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class DateUtil {
 	// ~ Static fields/initializers
 	// =============================================
-	private static Logger logger = LoggerFactory.getLogger(RsaUtil.class);
+	private static Logger logger = LoggerFactory.getLogger(DateUtil.class);
 	private static String defaultDatePattern = null;
 	private static String timePattern = "HH:mm";
 	private static Calendar cale = Calendar.getInstance();
