@@ -1,6 +1,8 @@
 package com.zh;
 
 import com.zh.dubbo.untils.DateUtil;
+import com.zh.dubbo.untils.IPUtil;
+import com.zh.dubbo.untils.UUIDUtil;
 import com.zh.dubbo.untils.security.MD5Util;
 import com.zh.dubbo.untils.security.SHAUtil;
 import org.junit.Test;
@@ -53,5 +55,18 @@ public class DateTest {
         String pwd = SHAUtil.getPwd("zhangweiguo","qw1t2s",5);
         System.out.println("pwd======"+pwd);
     }
-
+    @Test
+    public void uuid() throws Exception{
+        String uuid = UUIDUtil.genenrateUniqueInd();
+        System.out.println(uuid);
+        String uuidg = UUIDUtil.getUUID();
+        System.out.println("uuidg==="+uuidg);
+    }
+    @Test
+    public void ip(){
+        Long ip = IPUtil.ipStrToLong("127.0.0.1");
+        System.out.println("long ip ==="+ip);
+        String ipStr = IPUtil.ipLongToStr(ip);
+        System.out.println("ipStr ===="+ipStr);
+    }
 }

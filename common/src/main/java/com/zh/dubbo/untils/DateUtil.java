@@ -7,8 +7,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import com.zh.dubbo.untils.security.RsaUtil;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 日期处理工具类
@@ -16,7 +18,7 @@ import org.apache.log4j.Logger;
 public class DateUtil {
 	// ~ Static fields/initializers
 	// =============================================
-	private static Logger logger = Logger.getLogger(DateUtil.class);
+	private static Logger logger = LoggerFactory.getLogger(RsaUtil.class);
 	private static String defaultDatePattern = null;
 	private static String timePattern = "HH:mm";
 	private static Calendar cale = Calendar.getInstance();

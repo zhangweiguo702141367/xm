@@ -42,11 +42,20 @@
       <artifactId>commons-lang3</artifactId>
       <version>3.5</version>
     </dependency>
+    <!--Loging start-->
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.17</version>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.21</version>
     </dependency>
+    <!--Loging end-->
+    <!--加密jdk jar start-->
+    <dependency>
+      <groupId>org.bouncycastle</groupId>
+      <artifactId>bcprov-jdk15on</artifactId>
+      <version>1.54</version>
+    </dependency>
+    <!--加密jdk jar end-->
     <dependency>
       <groupId>com.alibaba</groupId>
       <artifactId>fastjson</artifactId>

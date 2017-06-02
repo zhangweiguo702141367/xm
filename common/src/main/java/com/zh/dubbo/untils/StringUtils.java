@@ -6,7 +6,10 @@ import com.zh.dubbo.entity.Config;
 import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Method;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -299,5 +302,32 @@ public class StringUtils {
             }
         }
         throw new Exception("未获取到要查询的配置项信息");
+    }
+    /**
+     * 字符串编码
+     * @param sStr
+     * @param sEnc
+     * @return String
+     */
+    public static String encode(String sStr, String sEnc) {
+        String sReturnCode = sStr;
+        try {
+            sReturnCode = URLEncoder.encode(sStr, sEnc);
+        } catch (UnsupportedEncodingException ex) {}
+        return sReturnCode;
+    }
+
+    /**
+     * 字符串解码
+     * @param sStr
+     * @param sEnc
+     * @return String
+     */
+    public static String decode(String sStr, String sEnc) {
+        String sReturnCode = sStr;
+        try {
+            sReturnCode = URLDecoder.decode(sStr, sEnc);
+        } catch (UnsupportedEncodingException ex) {}
+        return sReturnCode;
     }
 }
