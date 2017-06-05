@@ -2,7 +2,8 @@ package com.zh.dubbo.manage.member.impl;
 
 import com.zh.dubbo.dao.MemberDao;
 import com.zh.dubbo.manage.member.MemberService;
-import com.zh.dubbo.untils.DateUtil;
+import com.zh.dubbo.untils.*;
+import com.zh.dubbo.untils.security.SHAUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Created by Administrator on 2017/6/1.
@@ -37,30 +37,46 @@ public class MemberServiceImpl implements MemberService {
         if(params.get("login_ip") == null || "".equals(params.get("nick_name").toString())){
             throw new Exception("用户注册IP不能为空！");
         }
+        if(params.get("login_name") == null || "".equals(params.get("login_name").toString())){
+            throw new Exception("登陆名不能为空！");
+        }
         String nickName = params.get("nick_name").toString();
         //正则校验昵称只能为因为字符
         if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
             throw new Exception("注册手机号不能为空");
-        }
-        if(params.get("salt") == null || "".equals(params.get("salt").toString())){
-            throw new Exception("加密盐不能为空！");
         }
         if(params.get("password") == null || "".equals(params.get("password").toString())){
             throw new Exception("登录密码不能为空！");
         }
         String mobilePhone = params.get("mobile_phone").toString();
         //正则校验手机号格式
-        UUID spread_id = UUID.randomUUID();
-        String spreadId = spread_id.toString();
-        String spreadID = spreadId.substring(0, 8) + spreadId.substring(9, 13) + spreadId.substring(14, 18) + spreadId.substring(19, 23) + spreadId.substring(24);
+        if(!MatchUtil.checkPhone(mobilePhone)){
+            throw new Exception("请输入正确的手机号！");
+        }
+        String login_name = params.get("login_name").toString();
+        if(MatchUtil.checkPhone(login_name)){
+            login_name = login_name+"@mobile.com";
+        }else{
+            if(!MatchUtil.checkEmail(login_name)){
+                throw new Exception("请输入合法的邮箱！");
+            }
+        }
+        //解除绑定当前手机号对应的用户
+        memberDao.updateMemeberInfoFreeByPhone(mobilePhone);
+
+        String salt = RandomUtil.getStringRandom(7);
+        if("".equals(salt)){
+            throw new Exception("加密盐生成异常！");
+        }
+        String spreadID = UUIDUtil.getUUID();
         Map<String,Object> member = new HashMap<>();
         member.put("userId",params.get("user_id"));
-        member.put("salt",params.get("salt").toString());
-        member.put("password",params.get("password").toString());
-        member.put("loginName",mobilePhone);
+        member.put("salt",salt);
+        member.put("password", SHAUtil.getPwd(params.get("password").toString(),salt,5));
+        member.put("loginName",login_name);
         member.put("nickName",nickName);
         member.put("mobilePhone",mobilePhone);
-        member.put("headImage","AAAAA");
+        member.put("headImage","http://www.lxiaomei.com/nginx-logo.png");
         member.put("isMobile",1);
         member.put("isEamil",-1);
         member.put("isIdentity",-1);
@@ -70,13 +86,14 @@ public class MemberServiceImpl implements MemberService {
         member.put("registerDate",DateUtil.getDate());
         member.put("spreadId",spreadID);
         member.put("roleId",1);
+        if(!login_name.endsWith("@mobile.com")){
+            member.put("email",params.get("login_name"));
+        }
         member.put("addTime",DateUtil.getCurrentTime());
         //创建用户
         memberDao.insertMember(member);
         logger.error("member===="+member.toString());
-        //插入手机绑定表
-        memberDao.insertPhone(member);
-        //插入用户注册记录表
+       //插入用户注册记录表
         member.put("lastMobile",mobilePhone);
         member.put("updateMobile",mobilePhone);
         memberDao.insertPhoneRecording(member);
@@ -106,4 +123,6 @@ public class MemberServiceImpl implements MemberService {
 
         memberDao.insertLoginLog(data);
     }
+
+
 }
