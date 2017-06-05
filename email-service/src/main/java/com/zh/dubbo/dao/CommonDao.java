@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by 70214 on 2017/6/3.
@@ -42,4 +43,12 @@ public interface CommonDao {
     })
     @Select("SELECT * FROM sys_email_templete WHERE template_nid=#{nid}")
     EmailTemplate getSmsTemplateByNid(@Param("nid") String nid);
+
+    /**
+     * 插入email发送日志
+     * @param emailLog
+     */
+    @Insert("INSERT INTO sys_email_log(to_email,from_email,subject,html_body,text_body,from_alias,request_data,response_data,is_batch,is_attachment,attachment,env,batch_emails,create_time,send_status) VALUES(" +
+            "#{to_email},#{from_email},#{subject},#{html_body},#{text_body},#{from_alias},#{request_data},#{response_data},#{is_batch},#{is_attachment},#{attachment},#{env},#{batch_emails},#{create_time},#{send_status})")
+    void insetEmailLog(Map<String, Object> emailLog);
 }
