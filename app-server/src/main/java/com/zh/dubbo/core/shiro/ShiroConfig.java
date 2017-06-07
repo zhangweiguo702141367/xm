@@ -27,6 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
@@ -322,7 +323,7 @@ public class ShiroConfig {
     }
     @Bean
     public JedisPool jedisPool(){
-        JedisPool jedisPool = new JedisPool(jedisPoolConfig(),"47.92.87.170",6379,5000);
+        JedisPool jedisPool = new JedisPool(jedisPoolConfig(),"47.92.87.170",26379,5000,"aeb03773d5f1ef69bb77925ec2d2f407");
         return jedisPool;
     }
     @Bean

@@ -34,7 +34,7 @@ public class MyShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
-        System.out.print("enter doGetAuthenticationInfo");
+        System.out.println("enter doGetAuthenticationInfo");
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         System.out.println("get token");
         String name = token.getUsername();

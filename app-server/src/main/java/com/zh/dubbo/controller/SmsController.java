@@ -1,18 +1,15 @@
 package com.zh.dubbo.controller;
 
 import com.github.pagehelper.PageInfo;
-import com.zh.dubbo.core.shiro.cache.VCache;
 import com.zh.dubbo.entity.SysPermissionInit;
 import com.zh.dubbo.fo.ServiceFo;
 import com.zh.dubbo.fo.UserServiceFo;
 import com.zh.dubbo.untils.IPUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +43,7 @@ public class SmsController {
     @GetMapping("/test1")
     public String login(HttpServletRequest request){
         String result = "test1 this request ip +"+ IPUtil.getIpAddr(request);
+        System.out.println("IPUtil===="+result);
         try {
             UsernamePasswordToken token = new UsernamePasswordToken("zhangsan", "a123123");
             SecurityUtils.getSubject().login(token);
