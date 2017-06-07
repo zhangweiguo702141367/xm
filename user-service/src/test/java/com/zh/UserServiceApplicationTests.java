@@ -44,8 +44,7 @@ public class UserServiceApplicationTests {
 		params.put("login_name","702141367@qq.com");
 
 		try {
-			int member_id = memberService.insertUser(params);
-			System.out.print(member_id);
+			System.out.print(memberService.insertUser(params));
 		}catch (Exception e){
 			if(e.getMessage().indexOf("userID")>0){
 				System.out.println("userId重复======================================");
@@ -81,6 +80,38 @@ public class UserServiceApplicationTests {
 			params.put("member_id",23);
 			params.put("member_phone","13834412691");
 			authService.phoneAuth(params);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	@Test
+	public void login(){
+		try{
+			Map<String,Object> params = new HashMap<>();
+			params.put("login_name","13834412699");
+			params.put("password","a123123");
+			System.out.println(memberService.memberLogin(params));
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	@Test
+	public void isEmailAuth(){
+		try{
+			System.out.println(authService.isEmailAuth("702141367@qq.com"));
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	@Test
+	public void emailAuth(){
+		try{
+			Map<String,Object> params = new HashMap<>();
+			params.put("member_id","27");
+			params.put("email","702141367@qq.com");
+			System.out.println("==============================================================");
+			System.out.println("邮箱认证================="+authService.emailAuth(params));
+			System.out.println("==============================================================");
 		}catch (Exception e){
 			e.printStackTrace();
 		}

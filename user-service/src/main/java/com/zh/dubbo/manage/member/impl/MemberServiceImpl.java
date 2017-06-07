@@ -23,7 +23,7 @@ public class MemberServiceImpl implements MemberService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int insertUser(Map<String, Object> params) throws Exception {
+    public Map<String,Object> insertUser(Map<String, Object> params) throws Exception {
 
         if(params == null || params.size() == 0){
             throw new Exception("参数列表不能为空！");
@@ -37,9 +37,9 @@ public class MemberServiceImpl implements MemberService {
         if(params.get("login_ip") == null || "".equals(params.get("nick_name").toString())){
             throw new Exception("用户注册IP不能为空！");
         }
-        if(params.get("login_name") == null || "".equals(params.get("login_name").toString())){
-            throw new Exception("登陆名不能为空！");
-        }
+//        if(params.get("login_name") == null || "".equals(params.get("login_name").toString())){
+//            throw new Exception("登陆名不能为空！");
+//        }
         String nickName = params.get("nick_name").toString();
         //正则校验昵称只能为因为字符
         if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
@@ -53,14 +53,14 @@ public class MemberServiceImpl implements MemberService {
         if(!MatchUtil.checkPhone(mobilePhone)){
             throw new Exception("请输入正确的手机号！");
         }
-        String login_name = params.get("login_name").toString();
-        if(MatchUtil.checkPhone(login_name)){
-            login_name = login_name+"@mobile.com";
-        }else{
-            if(!MatchUtil.checkEmail(login_name)){
-                throw new Exception("请输入合法的邮箱！");
-            }
-        }
+//        String login_name = params.get("login_name").toString();
+//        if(MatchUtil.checkPhone(login_name)){
+//            login_name = login_name+"@mobile.com";
+//        }else{
+//            if(!MatchUtil.checkEmail(login_name)){
+//                throw new Exception("请输入合法的邮箱！");
+//            }
+//        }
         //解除绑定当前手机号对应的用户
         memberDao.updateMemeberInfoFreeByPhone(mobilePhone);
 
@@ -73,12 +73,12 @@ public class MemberServiceImpl implements MemberService {
         member.put("userId",params.get("user_id"));
         member.put("salt",salt);
         member.put("password", SHAUtil.getPwd(params.get("password").toString(),salt,5));
-        member.put("loginName",login_name);
+        member.put("loginName",mobilePhone);
         member.put("nickName",nickName);
         member.put("mobilePhone",mobilePhone);
         member.put("headImage","http://www.lxiaomei.com/nginx-logo.png");
         member.put("isMobile",1);
-        member.put("isEamil",-1);
+        member.put("isEmail",-1);
         member.put("isIdentity",-1);
         member.put("lastLoginTime",DateUtil.getTime());
         member.put("lastLoginDate",DateUtil.getDate());
@@ -86,9 +86,9 @@ public class MemberServiceImpl implements MemberService {
         member.put("registerDate",DateUtil.getDate());
         member.put("spreadId",spreadID);
         member.put("roleId",1);
-        if(!login_name.endsWith("@mobile.com")){
-            member.put("email",params.get("login_name"));
-        }
+//        if(!login_name.endsWith("@mobile.com")){
+//            member.put("email",params.get("login_name"));
+//        }
         member.put("addTime",DateUtil.getCurrentTime());
         //创建用户
         memberDao.insertMember(member);
@@ -97,7 +97,10 @@ public class MemberServiceImpl implements MemberService {
         member.put("lastMobile",mobilePhone);
         member.put("updateMobile",mobilePhone);
         memberDao.insertPhoneRecording(member);
-        return Integer.valueOf(member.get("memberId").toString());
+        //去除用户名密码和随机盐
+        member.remove("password");
+        member.remove("salt");
+        return member;
     }
 
     @Override
@@ -122,6 +125,102 @@ public class MemberServiceImpl implements MemberService {
         data.put("addTime",DateUtil.getCurrentTime());
 
         memberDao.insertLoginLog(data);
+    }
+
+    @Override
+    public void updateMemberPassword(Map<String, Object> params) throws Exception {
+           if(params == null || params.size() == 0){
+               throw new Exception("参数列表不能为空！");
+           }
+           if(params.get("type") == null || "".equals(params.get("type").toString())){
+               throw new Exception("操作类型不能为空！");
+           }
+           if(params.get("memebr_id") == null || "".equals(params.get("member_id").toString())){
+               throw new Exception("用户Id不能为空！");
+           }
+           String member_id = params.get("member_id").toString();
+           //判断这个用户存在否
+           Map<String,Object> memberInfo = memberDao.getMemberInfoById(member_id);
+           if(memberInfo == null || memberInfo.size() == 0){
+               throw new Exception("用户信息有误,请稍后重试！");
+           }
+           String password = "";
+           String type = params.get("type").toString();
+           if("1".equals(type)){//如果是1则为忘记密码
+               if(params.get("password") == null || "".equals(params.get("password").toString())){
+                   throw new Exception("新密码不能为空！");
+               }
+               //校验密码规则只能为数字字母和特殊字符 不能为汉字
+               if(MatchUtil.is_chinese(params.get("password").toString())){
+                   throw new Exception("密码不能包含汉字请重新输入密码");
+               }
+               password = params.get("password").toString();
+           }else if("2".equals(type)){//如果2则表示重置密码
+               if(params.get("old_password") == null || "".equals(params.get("old_password").toString())){
+                   throw new Exception("旧密码不能为空！");
+               }
+               if(params.get("first_password") == null || "".equals(params.get("first_password").toString())){
+                   throw new Exception("第一次密码不能为空！");
+               }
+               if(params.get("second_password") == null || "".equals(params.get("second_password").toString())){
+                   throw new Exception("第二次密码不能为空！");
+               }
+               String first_password = params.get("first_password").toString();
+               String second_password = params.get("second_password").toString();
+               String old_password = params.get("old_password").toString();
+               if(first_password.equals(second_password)){
+                   throw new Exception("两次密码不一致，请您重新输入！");
+               }
+               //校验密码不能为汉字
+               if(MatchUtil.is_chinese(first_password)){
+                   throw new Exception("密码不能包含汉字请重新输入密码");
+               }
+               if(MatchUtil.is_chinese(old_password)){
+                   throw new Exception("密码不能包含汉字请重新输入密码");
+               }
+               //旧密码的随机盐
+               String old_salt = memberInfo.get("salt").toString();
+               String oldpwd = SHAUtil.getPwd(old_password,old_salt,5);
+               if(!oldpwd.equals(memberInfo.get("password").toString())){
+                   throw new Exception("旧密码不正确，请输入正确的旧密码");
+               }
+               password = first_password;
+
+           }
+        String salt = RandomUtil.getStringRandom(7);
+        if("".equals(salt)){
+            throw new Exception("加密盐生成异常！");
+        }
+        String newPassword = SHAUtil.getPwd(password,salt,5);
+        memberDao.updateMemberByPasswordSaltMemberId(newPassword,salt,member_id);
+    }
+
+    @Override
+    public Map<String, Object> memberLogin(Map<String, Object> params) throws Exception {
+        if(params == null || params.size() == 0){
+            throw new  Exception("参数列表不能为空！");
+        }
+        if(params.get("login_name") == null || "".equals(params.get("login_name").toString())){
+            throw new Exception("用户登录名不能为空！");
+        }
+        if(params.get("password") == null || "".equals(params.get("password").toString())){
+            throw new Exception("用户密码不能为空！");
+        }
+        String login_name = params.get("login_name").toString();
+        String password = params.get("password").toString();
+        Map<String,Object> saltMap = memberDao.getSaltByLoginName(login_name);
+        if(saltMap == null || saltMap.size() == 0){
+            throw new Exception("当前用户不存在");
+        }
+        String salt = saltMap.get("salt").toString();
+        String newPassword = SHAUtil.getPwd(password,salt,5);
+        Map<String,Object> member = memberDao.getMemberInfoByUsernameAndPassword(login_name,newPassword);
+        if(member == null || member.size() == 0){
+            throw new Exception("用户名密码不一致！请重新登录");
+        }
+        member.remove("password");
+        member.remove("salt");
+        return member;
     }
 
 

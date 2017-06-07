@@ -1,12 +1,11 @@
 package com.zh.dubbo.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.zh.dubbo.dao.MemberDao;
 import com.zh.dubbo.entity.SysPermissionInit;
 import com.zh.dubbo.manage.auth.AuthService;
+import com.zh.dubbo.manage.member.MemberService;
 import com.zh.dubbo.manage.sysPermission.SysPermissonService;
 import com.zh.dubbo.service.UserService;
-import com.zh.dubbo.untils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
@@ -21,7 +20,7 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private SysPermissonService sysPermissonService;
     @Autowired
-    MemberDao memberDao;
+    MemberService memberService;
     @Autowired
     AuthService authService;
     @Override
@@ -30,18 +29,23 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public int insertUser(Map<String, Object> params) throws Exception {
-        return 0;
+    public Map<String,Object> insertUser(Map<String, Object> params) throws Exception {
+        return memberService.insertUser(params);
+    }
+
+    @Override
+    public void updateMemberPassword(Map<String, Object> params) throws Exception {
+        memberService.updateMemberPassword(params);
     }
 
     @Override
     public void insertLoginLog(Map<String, Object> params) throws Exception {
-        memberDao.insertLoginLog(params);
+        memberService.insertLoginLog(params);
     }
 
     @Override
-    public void phoneAuth(Map<String, Object> params) throws Exception {
-        authService.phoneAuth(params);
+    public Map<String,Object> phoneAuth(Map<String, Object> params) throws Exception {
+        return authService.phoneAuth(params);
     }
 
     @Override
@@ -50,12 +54,24 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void emailAuth(Map<String, Object> params) throws Exception {
+    public Map<String,Object> emailAuth(Map<String, Object> params) throws Exception {
+        return authService.emailAuth(params);
+    }
 
+    @Override
+    public boolean isEmailAuth(String email) throws Exception {
+        return authService.isEmailAuth(email);
     }
 
     @Override
     public void realNameAuth(Map<String, Object> params) throws Exception {
 
     }
+
+    @Override
+    public Map<String, Object> memberLogin(Map<String, Object> params) throws Exception {
+        return null;
+    }
+
+
 }

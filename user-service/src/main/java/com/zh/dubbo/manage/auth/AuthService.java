@@ -11,7 +11,7 @@ public interface AuthService {
      * @param params
      * @throws Exception
      */
-    public void phoneAuth(Map<String,Object> params) throws Exception;
+    public Map<String,Object> phoneAuth(Map<String,Object> params) throws Exception;
     /**
      * 手机认证(判断是否手机认证过或者登陆名和当前手机号一致)
      * @param params
@@ -23,7 +23,13 @@ public interface AuthService {
      * @param params
      * @throws Exception
      */
-    public void emailAuth(Map<String,Object> params) throws Exception;
+    public Map<String,Object> emailAuth(Map<String,Object> params) throws Exception;
+    /**
+     * 判断当前邮箱是否被认证
+     * @param email
+     * @throws Exception
+     */
+    public boolean isEmailAuth(String email) throws Exception;
     /**
      * 实名认证
      * @param params

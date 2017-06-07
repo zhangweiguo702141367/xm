@@ -12,7 +12,7 @@ public interface MemberService {
      * @return
      * @throws Exception
      */
-    public int insertUser(Map<String,Object> params) throws Exception;
+    public Map<String,Object> insertUser(Map<String,Object> params) throws Exception;
 
     /**
      * 插入用户登录日志
@@ -20,4 +20,17 @@ public interface MemberService {
      * @throws Exception
      */
     public void insertLoginLog(Map<String,Object> params) throws Exception;
+
+    /**
+     * 修改用户密码(包含忘记密码和重置密码)
+     * @param params
+     * @throws Exception
+     */
+    public void updateMemberPassword(Map<String,Object> params) throws Exception;
+    /**
+     * 用户登录
+     * @param params
+     * @throws Exception
+     */
+    public Map<String,Object> memberLogin(Map<String,Object> params) throws Exception;
 }

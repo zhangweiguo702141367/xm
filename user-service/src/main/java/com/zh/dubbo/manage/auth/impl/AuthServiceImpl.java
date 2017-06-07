@@ -1,8 +1,10 @@
 package com.zh.dubbo.manage.auth.impl;
 
+import com.zh.dubbo.dao.AuthDao;
 import com.zh.dubbo.dao.MemberDao;
 import com.zh.dubbo.manage.auth.AuthService;
 import com.zh.dubbo.untils.DateUtil;
+import com.zh.dubbo.untils.MatchUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +22,11 @@ public class AuthServiceImpl implements AuthService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     MemberDao memberDao;
+    @Autowired
+    AuthDao authDao;
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void phoneAuth(Map<String, Object> params) throws Exception {
+    public Map<String,Object> phoneAuth(Map<String, Object> params) throws Exception {
         if(params == null || params.size() == 0){
             throw new Exception("参数列表不能为空！");
         }
@@ -58,6 +62,12 @@ public class AuthServiceImpl implements AuthService {
             phoneRecord.put("update_mobile",mobile_phone);
             phoneRecord.put("add_time", DateUtil.getCurrentTime());
             memberDao.insertPhoneRecording(phoneRecord);
+            //完成操作后结束否则继续执行，当前认证手机用户中手机号不存在的情况
+            //根据用户id获取最新用户信息
+            Map<String,Object> member = memberDao.getMemberInfoById(member_id);
+            member.remove("password");
+            member.remove("salt");
+            return member;
         }
         //否则获取最近一次变更的手机号作为上一次手机号，同时当前手机号作为这次手机号更新用户表更新手机记录表
         //1、更新用户表，如果当前手机号被认证则至为空
@@ -70,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
             throw new Exception("获取最新一次手机号变更异常！");
         }
         if(memberRecordPhone.get("update_mobile") == null || "".equals(memberRecordPhone.get("update_mobile").toString())){
-            throw new Exception("");
+            throw new Exception("获取最新一次手机号变更异常！");
         }
         //4、插入手机变更表
         String update_mobile = memberRecordPhone.get("update_mobile").toString();
@@ -80,6 +90,11 @@ public class AuthServiceImpl implements AuthService {
         phoneRecord.put("updateMobile",mobile_phone);
         phoneRecord.put("addTime", DateUtil.getCurrentTime());
         memberDao.insertPhoneRecording(phoneRecord);
+        //根据用户id获取最新用户信息
+        Map<String,Object> member = memberDao.getMemberInfoById(member_id);
+        member.remove("password");
+        member.remove("salt");
+        return member;
     }
 
     @Override
@@ -104,8 +119,98 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public void emailAuth(Map<String, Object> params) throws Exception {
+    @Transactional(rollbackFor = Exception.class)
+    public Map<String,Object> emailAuth(Map<String, Object> params) throws Exception {
+        if(params == null || params.size() == 0){
+            throw new Exception("参数列表不能为空！");
+        }
+        if(params.get("email") == null || "".equals(params.get("email").toString())){
+            throw new Exception("邮件地址不能为空");
+        }
+        String email = params.get("email").toString();
+        if(!MatchUtil.checkEmail(email)){
+            throw new Exception("请输入正确的邮箱地址");
+        }
+        if(params.get("member_id") == null || "".equals(params.get("member_id").toString())){
+            throw new Exception("用户id不能为空");
+        }
+        String member_id = params.get("member_id").toString();
+        //根据用户id获取用户信息
+        Map<String,Object> memberInfo = memberDao.getMemberInfoById(member_id);
+        if(memberInfo == null || memberInfo.size() == 0){
+            throw new Exception("获取用户信息异常！");
+        }
+        //获取用户邮箱绑定状态
+        String is_email = memberInfo.get("is_email").toString();
+        //用户变更邮箱时(当前用户是绑定状态)
+        if("1".equals(is_email)){
+            String email_current = memberInfo.get("email").toString();
+            //相同则抛异常返回
+            if(email_current.equals(email)){
+                throw new Exception("请不要使用相同邮箱认证");
+            }
+            //不同则做更新
+            //1、解绑已绑定这个邮箱的用户
+            authDao.updateMemberInfoByEmail(email);
+            //2、更新当前用户的邮箱信息
+            authDao.updateEmailMemberInfoByMemberId(email,member_id);
+            //3、插入邮箱变更表
+            Map<String,Object> emailRecord = new HashMap<>();
+            emailRecord.put("memberId",member_id);
+            emailRecord.put("lastEmail",email_current);
+            emailRecord.put("updateEmail",email);
+            emailRecord.put("addTime", DateUtil.getCurrentTime());
+            authDao.insertEmailRecording(emailRecord);
+            //完成操作后结束否则继续执行，当前认证手机用户中手机号不存在的情况
+        }else if("-1".equals(is_email)){//如果是1则表示用户第一次绑定
+            //1、解绑已绑定这个邮箱的用户
+            authDao.updateMemberInfoByEmail(email);
+            //2、更新当前用户的邮箱信息
+            authDao.updateEmailMemberInfoByMemberId(email,member_id);
+            //3、插入邮箱变更表
+            Map<String,Object> emailRecord = new HashMap<>();
+            emailRecord.put("memberId",member_id);
+            emailRecord.put("lastEmail",email);
+            emailRecord.put("updateEmail",email);
+            emailRecord.put("addTime", DateUtil.getCurrentTime());
+            authDao.insertEmailRecording(emailRecord);
+        }else if("2".equals(is_email)){//解绑状态
+            //1、解绑已绑定这个邮箱的用户
+            authDao.updateMemberInfoByEmail(email);
+            //2、更新当前用户的邮箱信息
+            authDao.updateEmailMemberInfoByMemberId(email,member_id);
+            //3、获取上一次绑定邮箱
+            Map<String,Object> email_recording = authDao.getEmailRecordByMemberId(member_id);
+            if(email_recording == null || email_recording.size() == 0){
+                throw new Exception("获取上一次邮箱变更记录失败！");
+            }
+            String last_email = email_recording.get("update_email").toString();
+            //3、插入邮箱变更表
+            Map<String,Object> emailRecord = new HashMap<>();
+            emailRecord.put("memberId",member_id);
+            emailRecord.put("lastEmail",last_email);
+            emailRecord.put("updateEmail",email);
+            emailRecord.put("addTime", DateUtil.getCurrentTime());
+            authDao.insertEmailRecording(emailRecord);
+        }
+        //根据member_id获取用户信息
+        Map<String,Object> member = memberDao.getMemberInfoById(member_id);
+        member.remove("password");
+        member.remove("salt");
+        return member;
+    }
 
+    @Override
+    public boolean isEmailAuth(String email) throws Exception {
+        if("".equals(email)){
+            throw new Exception("邮箱不能为空！");
+        }
+        Map<String,Object> member_info = authDao.getMemberByEmail(email);
+        if(member_info != null && member_info.size() != 0){
+            //如果用户信息不为空，则说明已被认证
+            return true;
+        }
+        return false;
     }
 
     @Override
