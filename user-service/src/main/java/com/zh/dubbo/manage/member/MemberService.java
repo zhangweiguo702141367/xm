@@ -1,5 +1,7 @@
 package com.zh.dubbo.manage.member;
 
+import com.zh.dubbo.entity.UUser;
+
 import java.util.Map;
 
 /**
@@ -12,7 +14,7 @@ public interface MemberService {
      * @return
      * @throws Exception
      */
-    public Map<String,Object> insertUser(Map<String,Object> params) throws Exception;
+    public UUser insertUser(Map<String,Object> params) throws Exception;
 
     /**
      * 插入用户登录日志
@@ -32,5 +34,5 @@ public interface MemberService {
      * @param params
      * @throws Exception
      */
-    public Map<String,Object> memberLogin(Map<String,Object> params) throws Exception;
+    public UUser memberLogin(Map<String,Object> params) throws Exception;
 }

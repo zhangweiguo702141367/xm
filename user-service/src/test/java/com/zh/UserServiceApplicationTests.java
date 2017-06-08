@@ -78,8 +78,8 @@ public class UserServiceApplicationTests {
 		try{
 			Map<String,Object> params = new HashMap<>();
 			params.put("member_id",23);
-			params.put("member_phone","13834412691");
-			authService.phoneAuth(params);
+			params.put("member_phone","13345874785");
+			System.out.println("uuser ========="+authService.phoneAuth(params));
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -88,9 +88,9 @@ public class UserServiceApplicationTests {
 	public void login(){
 		try{
 			Map<String,Object> params = new HashMap<>();
-			params.put("login_name","13834412699");
+			params.put("login_name","13834412691");
 			params.put("password","a123123");
-			System.out.println(memberService.memberLogin(params));
+			System.out.println(memberService.memberLogin(params).toString());
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -108,7 +108,7 @@ public class UserServiceApplicationTests {
 		try{
 			Map<String,Object> params = new HashMap<>();
 			params.put("member_id","27");
-			params.put("email","702141367@qq.com");
+			params.put("email","2511013760@qq.com");
 			System.out.println("==============================================================");
 			System.out.println("邮箱认证================="+authService.emailAuth(params));
 			System.out.println("==============================================================");

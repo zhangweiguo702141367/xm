@@ -1,6 +1,7 @@
 package com.zh.dubbo.service;
 
 import com.zh.dubbo.entity.SysPermissionInit;
+import com.zh.dubbo.entity.UUser;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,7 @@ public interface UserService {
      * @return
      * @throws Exception
      */
-    public Map<String,Object> insertUser(Map<String,Object> params) throws Exception;
+    public UUser insertUser(Map<String,Object> params) throws Exception;
 
     /**
      * 修改用户密码(包含忘记密码和重置密码)
@@ -42,7 +43,7 @@ public interface UserService {
      * @param params
      * @throws Exception
      */
-    public Map<String,Object> phoneAuth(Map<String,Object> params) throws Exception;
+    public UUser phoneAuth(Map<String,Object> params) throws Exception;
     /**
      * 手机认证(判断是否手机认证过或者登陆名和当前手机号一致)
      * 用户认证之前做的校验(或者开户之前)
@@ -55,7 +56,7 @@ public interface UserService {
      * @param params
      * @throws Exception
      */
-    public Map<String,Object> emailAuth(Map<String,Object> params) throws Exception;
+    public UUser emailAuth(Map<String,Object> params) throws Exception;
     /**
      * 邮箱是否被认证
      * 用户认证之前做的校验
@@ -74,6 +75,6 @@ public interface UserService {
      * @param params
      * @throws Exception
      */
-    public Map<String,Object> memberLogin(Map<String,Object> params) throws Exception;
+    public UUser memberLogin(Map<String,Object> params) throws Exception;
 
 }

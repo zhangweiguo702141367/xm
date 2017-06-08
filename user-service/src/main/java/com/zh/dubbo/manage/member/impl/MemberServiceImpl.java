@@ -1,6 +1,7 @@
 package com.zh.dubbo.manage.member.impl;
 
 import com.zh.dubbo.dao.MemberDao;
+import com.zh.dubbo.entity.UUser;
 import com.zh.dubbo.manage.member.MemberService;
 import com.zh.dubbo.untils.*;
 import com.zh.dubbo.untils.security.SHAUtil;
@@ -23,7 +24,7 @@ public class MemberServiceImpl implements MemberService {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String,Object> insertUser(Map<String, Object> params) throws Exception {
+    public UUser insertUser(Map<String, Object> params) throws Exception {
 
         if(params == null || params.size() == 0){
             throw new Exception("参数列表不能为空！");
@@ -97,10 +98,11 @@ public class MemberServiceImpl implements MemberService {
         member.put("lastMobile",mobilePhone);
         member.put("updateMobile",mobilePhone);
         memberDao.insertPhoneRecording(member);
-        //去除用户名密码和随机盐
-        member.remove("password");
-        member.remove("salt");
-        return member;
+        //获取用户信息
+        UUser user = memberDao.getMemberInfoById(member.get("memberId").toString());
+        user.setSalt(null);
+        user.setPassword(null);
+        return user;
     }
 
     @Override
@@ -140,8 +142,8 @@ public class MemberServiceImpl implements MemberService {
            }
            String member_id = params.get("member_id").toString();
            //判断这个用户存在否
-           Map<String,Object> memberInfo = memberDao.getMemberInfoById(member_id);
-           if(memberInfo == null || memberInfo.size() == 0){
+           UUser memberInfo = memberDao.getMemberInfoById(member_id);
+           if(memberInfo == null){
                throw new Exception("用户信息有误,请稍后重试！");
            }
            String password = "";
@@ -179,9 +181,9 @@ public class MemberServiceImpl implements MemberService {
                    throw new Exception("密码不能包含汉字请重新输入密码");
                }
                //旧密码的随机盐
-               String old_salt = memberInfo.get("salt").toString();
+               String old_salt = memberInfo.getSalt();
                String oldpwd = SHAUtil.getPwd(old_password,old_salt,5);
-               if(!oldpwd.equals(memberInfo.get("password").toString())){
+               if(!oldpwd.equals(memberInfo.getPassword())){
                    throw new Exception("旧密码不正确，请输入正确的旧密码");
                }
                password = first_password;
@@ -196,7 +198,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
-    public Map<String, Object> memberLogin(Map<String, Object> params) throws Exception {
+    public UUser memberLogin(Map<String, Object> params) throws Exception {
         if(params == null || params.size() == 0){
             throw new  Exception("参数列表不能为空！");
         }
@@ -214,12 +216,12 @@ public class MemberServiceImpl implements MemberService {
         }
         String salt = saltMap.get("salt").toString();
         String newPassword = SHAUtil.getPwd(password,salt,5);
-        Map<String,Object> member = memberDao.getMemberInfoByUsernameAndPassword(login_name,newPassword);
-        if(member == null || member.size() == 0){
+        UUser member = memberDao.getMemberInfoByUsernameAndPassword(login_name,newPassword);
+        if(member == null){
             throw new Exception("用户名密码不一致！请重新登录");
         }
-        member.remove("password");
-        member.remove("salt");
+        member.setPassword(null);
+        member.setSalt(null);
         return member;
     }
 

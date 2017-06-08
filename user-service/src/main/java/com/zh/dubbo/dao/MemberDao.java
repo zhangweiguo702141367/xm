@@ -1,5 +1,6 @@
 package com.zh.dubbo.dao;
 
+import com.zh.dubbo.entity.UUser;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 
@@ -44,8 +45,25 @@ public interface MemberDao {
      * @param password
      * @return
      */
+    @Results({
+            @Result(property = "loginName", column = "login_name"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "nickName", column = "nick_name"),
+            @Result(property = "mobilePhone", column = "mobile_phone"),
+            @Result(property = "headImage", column = "head_image"),
+            @Result(property = "isMobile", column = "is_mobile"),
+            @Result(property = "isEmail", column = "is_email"),
+            @Result(property = "isIdentity", column = "is_identity"),
+            @Result(property = "lastLoginTime", column = "last_login_time"),
+            @Result(property = "lastLoginDate", column = "last_login_date"),
+            @Result(property = "registerTime", column = "register_time"),
+            @Result(property = "registerDate", column = "register_date"),
+            @Result(property = "spreadId", column = "spread_id"),
+            @Result(property = "roleId", column = "role_id"),
+            @Result(property = "addTime", column = "add_time"),
+    })
     @Select("SELECT * FROM zh_member.mb_member WHERE login_name=#{login_name} AND password=#{password}")
-    public Map<String,Object> getMemberInfoByUsernameAndPassword(@Param("login_name") String login_name,@Param("password") String password);
+    public UUser getMemberInfoByUsernameAndPassword(@Param("login_name") String login_name, @Param("password") String password);
 
     /**
      * 根据登录名获取用户随机盐
@@ -67,23 +85,74 @@ public interface MemberDao {
      * @param member_id
      * @return
      */
+    @Results({
+            @Result(property = "loginName", column = "login_name"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "nickName", column = "nick_name"),
+            @Result(property = "mobilePhone", column = "mobile_phone"),
+            @Result(property = "headImage", column = "head_image"),
+            @Result(property = "isMobile", column = "is_mobile"),
+            @Result(property = "isEmail", column = "is_email"),
+            @Result(property = "isIdentity", column = "is_identity"),
+            @Result(property = "lastLoginTime", column = "last_login_time"),
+            @Result(property = "lastLoginDate", column = "last_login_date"),
+            @Result(property = "registerTime", column = "register_time"),
+            @Result(property = "registerDate", column = "register_date"),
+            @Result(property = "spreadId", column = "spread_id"),
+            @Result(property = "roleId", column = "role_id"),
+            @Result(property = "addTime", column = "add_time"),
+    })
     @Select("SELECT * FROM zh_member.mb_member WHERE id=#{member_id}")
-    public Map<String,Object> getMemberInfoById(@Param("member_id") String member_id);
+    public UUser getMemberInfoById(@Param("member_id") String member_id);
 
     /**
      * 根据用户认证手机号获取用户信息
      * @param phone
      * @return
      */
+    @Results({
+            @Result(property = "loginName", column = "login_name"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "nickName", column = "nick_name"),
+            @Result(property = "mobilePhone", column = "mobile_phone"),
+            @Result(property = "headImage", column = "head_image"),
+            @Result(property = "isMobile", column = "is_mobile"),
+            @Result(property = "isEmail", column = "is_email"),
+            @Result(property = "isIdentity", column = "is_identity"),
+            @Result(property = "lastLoginTime", column = "last_login_time"),
+            @Result(property = "lastLoginDate", column = "last_login_date"),
+            @Result(property = "registerTime", column = "register_time"),
+            @Result(property = "registerDate", column = "register_date"),
+            @Result(property = "spreadId", column = "spread_id"),
+            @Result(property = "roleId", column = "role_id"),
+            @Result(property = "addTime", column = "add_time"),
+    })
     @Select("SELECT * FROM zh_member.mb_member WHERE mobile_phone=#{phone}")
-    public Map<String,Object> getMemberInfoByPhone(@Param("phone") String phone);
+    public UUser getMemberInfoByPhone(@Param("phone") String phone);
     /**
      * 根据用户登陆手机号获取用户信息
      * @param phone
      * @return
      */
+    @Results({
+            @Result(property = "loginName", column = "login_name"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "nickName", column = "nick_name"),
+            @Result(property = "mobilePhone", column = "mobile_phone"),
+            @Result(property = "headImage", column = "head_image"),
+            @Result(property = "isMobile", column = "is_mobile"),
+            @Result(property = "isEmail", column = "is_email"),
+            @Result(property = "isIdentity", column = "is_identity"),
+            @Result(property = "lastLoginTime", column = "last_login_time"),
+            @Result(property = "lastLoginDate", column = "last_login_date"),
+            @Result(property = "registerTime", column = "register_time"),
+            @Result(property = "registerDate", column = "register_date"),
+            @Result(property = "spreadId", column = "spread_id"),
+            @Result(property = "roleId", column = "role_id"),
+            @Result(property = "addTime", column = "add_time"),
+    })
     @Select("SELECT * FROM zh_member.mb_member WHERE login_name=#{phone}")
-    public Map<String,Object> getMemberInfoByLoginPhone(@Param("phone") String phone);
+    public UUser getMemberInfoByLoginPhone(@Param("phone") String phone);
     /**
      * 根据用户认证手机号更新用户信息(解除绑定)
      * @param phone

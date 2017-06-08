@@ -2,6 +2,7 @@ package com.zh.dubbo.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.zh.dubbo.entity.SysPermissionInit;
+import com.zh.dubbo.entity.UUser;
 import com.zh.dubbo.manage.auth.AuthService;
 import com.zh.dubbo.manage.member.MemberService;
 import com.zh.dubbo.manage.sysPermission.SysPermissonService;
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Map<String,Object> insertUser(Map<String, Object> params) throws Exception {
+    public UUser insertUser(Map<String, Object> params) throws Exception {
         return memberService.insertUser(params);
     }
 
@@ -44,7 +45,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Map<String,Object> phoneAuth(Map<String, Object> params) throws Exception {
+    public UUser phoneAuth(Map<String, Object> params) throws Exception {
         return authService.phoneAuth(params);
     }
 
@@ -54,7 +55,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Map<String,Object> emailAuth(Map<String, Object> params) throws Exception {
+    public UUser emailAuth(Map<String, Object> params) throws Exception {
         return authService.emailAuth(params);
     }
 
@@ -69,7 +70,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Map<String, Object> memberLogin(Map<String, Object> params) throws Exception {
+    public UUser memberLogin(Map<String, Object> params) throws Exception {
         return null;
     }
 
