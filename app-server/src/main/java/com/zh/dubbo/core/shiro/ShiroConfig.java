@@ -42,7 +42,7 @@ import java.util.*;
 public class ShiroConfig {
     //登录url
     @Value("${shiro.loginUrl}")
-    private  String loginUrl = "/login";
+    private  String loginUrl = "/unlogin";
     //登录成功Url
     @Value("${shiro.successUrl}")
     private  String successUrl = "/index";
@@ -76,11 +76,12 @@ public class ShiroConfig {
         //初始设置自定义权限
         Map<String, String> chains = new LinkedHashMap<String,String>();
         chains.put("/login", "anon");
+        chains.put("/unlogin", "anon");
         chains.put("/unauthor", "anon");
         chains.put("/logout", "logout");
         chains.put("/unauthorized", "anon");
         chains.put("/favicon*", "anon");
-//        chains.put("/**", "login,kickout");
+        chains.put("/**", "login");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(chains);
         //设置filters
         Map<String, Filter> filters = new LinkedHashMap<String,Filter>();

@@ -1,7 +1,5 @@
 package com.zh.dubbo.core.shiro.filters;
 
-import com.zh.dubbo.entity.SysPermissionInit;
-import com.zh.dubbo.fo.UserServiceFo;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.mgt.DefaultFilterChainManager;
 import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
@@ -10,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -23,8 +20,8 @@ public class LoadFilterService {
     @Autowired
     ShiroFilterFactoryBean shiroFilterFactoryBean;
 
-    @Autowired
-    UserServiceFo userServiceFo;
+//    @Autowired
+//    UserServiceFo userServiceFo;
 
     /**
      * 初始化权限
@@ -33,12 +30,12 @@ public class LoadFilterService {
         // 权限控制map.从数据库获取
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
 
-        List<SysPermissionInit> list = userServiceFo.getAllSysPermissions();
-
-        for (SysPermissionInit sysPermissionInit : list) {
-            filterChainDefinitionMap.put(sysPermissionInit.getUrl(),
-                    sysPermissionInit.getPermissionInit());
-        }
+//        List<SysPermissionInit> list = userServiceFo.getAllSysPermissions();
+//
+//        for (SysPermissionInit sysPermissionInit : list) {
+//            filterChainDefinitionMap.put(sysPermissionInit.getUrl(),
+//                    sysPermissionInit.getPermissionInit());
+//        }
         return filterChainDefinitionMap;
     }
 

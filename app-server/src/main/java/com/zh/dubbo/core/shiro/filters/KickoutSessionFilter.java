@@ -3,7 +3,6 @@ package com.zh.dubbo.core.shiro.filters;
 import com.alibaba.dubbo.common.json.JSON;
 import com.zh.dubbo.core.shiro.cache.VCache;
 import com.zh.dubbo.core.shiro.session.ShiroSessionRepository;
-import com.zh.dubbo.core.shiro.tooken.manager.TokenManager;
 import com.zh.dubbo.entity.UUser;
 import com.zh.dubbo.utils.LoggerUtils;
 import org.apache.shiro.SecurityUtils;

@@ -1,5 +1,6 @@
 package com.zh.dubbo.core.shiro.tooken;
 
+import com.zh.dubbo.core.shiro.mapper.manage.member.MemberService;
 import com.zh.dubbo.entity.UUser;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
@@ -8,11 +9,17 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**备用参考
  * Created by 70214 on 2017/3/25.
  */
 public class MyShiroRealm extends AuthorizingRealm {
+    @Autowired
+    MemberService memberService;
     public MyShiroRealm(){
         super();
     }
@@ -39,10 +46,16 @@ public class MyShiroRealm extends AuthorizingRealm {
         System.out.println("get token");
         String name = token.getUsername();
         String password = String.valueOf(token.getPassword());
-        UUser user = new UUser();
-        user.setPswd("11111");
-        user.setNickname("zhangsan");
-        return  new SimpleAuthenticationInfo(user, password, getName());
+        Map<String,Object> params = new HashMap<>();
+        params.put("login_name",name);
+        params.put("password",password);
+        try {
+            UUser user = memberService.memberLogin(params);
+            return  new SimpleAuthenticationInfo(user, password, getName());
+        }catch (Exception e){
+            throw new AuthenticationException(e.getMessage());
+        }
+
     }
     /**
      * 清空当前用户权限信息

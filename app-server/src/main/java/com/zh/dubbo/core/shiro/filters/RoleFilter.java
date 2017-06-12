@@ -66,7 +66,7 @@ public class RoleFilter extends AccessControlFilter {
 	                WebUtils.toHttp(response).sendError(HttpServletResponse.SC_UNAUTHORIZED);
 	            }  
 	        }  
-		return false;
+		return Boolean.TRUE;
 	}
 
 }

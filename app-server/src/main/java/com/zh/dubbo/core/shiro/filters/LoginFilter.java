@@ -1,7 +1,6 @@
 package com.zh.dubbo.core.shiro.filters;
 
 
-import com.zh.dubbo.core.shiro.tooken.manager.TokenManager;
 import com.zh.dubbo.entity.UUser;
 import com.zh.dubbo.utils.LoggerUtils;
 import org.apache.shiro.SecurityUtils;
@@ -59,7 +58,7 @@ public class LoginFilter  extends AccessControlFilter {
 		System.out.println("enter loginfilter2");
 		//保存Request和Response 到登录后的链接
 		saveRequestAndRedirectToLogin(request, response);
-		return Boolean.FALSE ;
+		return Boolean.TRUE ;
 	}
 	
 

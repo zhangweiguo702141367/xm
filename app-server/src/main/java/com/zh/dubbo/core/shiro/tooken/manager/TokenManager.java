@@ -56,7 +56,7 @@ public class TokenManager {
 	 * @return
 	 */
 	public static String getNickname(){
-		return getToken().getNickname();
+		return getToken().getLoginName();
 	}
 	/**
 	 * 获取当前用户ID
@@ -98,8 +98,8 @@ public class TokenManager {
 	 * @param rememberMe
 	 * @return
 	 */
-	public static UUser login(UUser user,Boolean rememberMe){
-		ShiroToken token = new ShiroToken(user.getEmail(), user.getPswd());
+	public static UUser login(UUser user, Boolean rememberMe){
+		ShiroToken token = new ShiroToken(user.getLoginName(), user.getPassword());
 		token.setRememberMe(rememberMe);
 		SecurityUtils.getSubject().login(token);
 		return getToken();

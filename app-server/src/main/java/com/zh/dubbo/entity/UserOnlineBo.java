@@ -27,7 +27,7 @@ public class UserOnlineBo extends UUser implements Serializable {
     }
 
     public UserOnlineBo(UUser user) {
-        super(user);
+        super();
     }
 
 
