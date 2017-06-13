@@ -10,6 +10,8 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +19,7 @@ import java.util.Map;
 /**备用参考
  * Created by 70214 on 2017/3/25.
  */
+@Component
 public class MyShiroRealm extends AuthorizingRealm {
     @Autowired
     MemberService memberService;

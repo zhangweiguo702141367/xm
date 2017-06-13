@@ -29,10 +29,10 @@ import java.util.List;
  * Shiro管理下的Token工具类
  */
 public class TokenManager {
-	//用户登录管理
-	public static final MyShiroRealm realm = SpringContextUtil.getBean("myShiroRealm",MyShiroRealm.class);
-	//用户session管理
-	public static final CustomSessionManager customSessionManager = SpringContextUtil.getBean("customSessionManager",CustomSessionManager.class);
+//	//用户登录管理
+//	public static final MyShiroRealm realm = SpringContextUtil.getBean("myShiroRealm",MyShiroRealm.class);
+//	//用户session管理
+//	public static final CustomSessionManager customSessionManager = SpringContextUtil.getBean("customSessionManager",CustomSessionManager.class);
 	/**
 	 * 获取当前登录的用户User对象
 	 * @return
@@ -140,7 +140,7 @@ public class TokenManager {
 		/**
 		 * 方法二、通过ApplicationContext 从Spring容器里获取实列化对象。
 		 */
-		realm.clearCachedAuthorizationInfo();
+//		realm.clearCachedAuthorizationInfo();
 		/**
 		 * 当然还有很多直接或者间接的方法，此处不纠结。
 		 */
@@ -153,25 +153,25 @@ public class TokenManager {
 	 * 根据UserIds 	清空权限信息。
 	 * @param userIds	用户ID
 	 */
-	public static void clearUserAuthByUserId(Long...userIds){
-		
-		if(null == userIds || userIds.length == 0)	return ;
-		List<SimplePrincipalCollection> result = customSessionManager.getSimplePrincipalCollectionByUserId(userIds);
-		
-		for (SimplePrincipalCollection simplePrincipalCollection : result) {
-			realm.clearCachedAuthorizationInfo(simplePrincipalCollection);
-		}
-	}
+//	public static void clearUserAuthByUserId(Long...userIds){
+//
+//		if(null == userIds || userIds.length == 0)	return ;
+//		List<SimplePrincipalCollection> result = customSessionManager.getSimplePrincipalCollectionByUserId(userIds);
+//
+//		for (SimplePrincipalCollection simplePrincipalCollection : result) {
+//			realm.clearCachedAuthorizationInfo(simplePrincipalCollection);
+//		}
+//	}
 
 
 	/**
 	 * 方法重载
 	 * @param userIds
 	 */
-	public static void clearUserAuthByUserId(List<Long> userIds) {
-		if(null == userIds || userIds.size() == 0){
-			return ;
-		}
-		clearUserAuthByUserId(userIds.toArray(new Long[0]));
-	}
+//	public static void clearUserAuthByUserId(List<Long> userIds) {
+//		if(null == userIds || userIds.size() == 0){
+//			return ;
+//		}
+//		clearUserAuthByUserId(userIds.toArray(new Long[0]));
+//	}
 }

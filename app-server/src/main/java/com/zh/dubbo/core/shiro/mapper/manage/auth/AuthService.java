@@ -15,7 +15,19 @@ public interface AuthService {
      */
     public UUser phoneAuth(Map<String, Object> params) throws Exception;
     /**
-     * 手机认证(判断是否手机认证过或者登陆名和当前手机号一致)
+     * 手机认证(登陆名和当前手机号一致)
+     * @param params
+     * @throws Exception
+     */
+    public boolean isPhoneRegister(Map<String, Object> params) throws Exception;
+    /**
+     * 手机认证(判断是否手机认证过)
+     * @param params
+     * @throws Exception
+     */
+    public boolean isPhoneBind(Map<String, Object> params) throws Exception;
+    /**
+     * 手机认证(判断是否手机认证过/登陆名和当前手机号一致)
      * @param params
      * @throws Exception
      */

@@ -17,6 +17,15 @@ public class MemberServiceFo {
     MemberService  memberService;
 
     /**
+     * 注册用户
+     * @param params
+     * @return
+     * @throws Exception
+     */
+    public UUser register(Map<String,Object> params) throws Exception{
+        return memberService.insertUser(params);
+    }
+    /**
      * 忘记或者重置登录密码
      * @param params
      * @throws Exception
@@ -31,5 +40,18 @@ public class MemberServiceFo {
      */
     public UUser getMmeberInfoByLoginName(String login_name) throws Exception{
         return memberService.getMmeberInfoByLoginName(login_name);
+    }
+
+    /**
+     * 插入用户登录日志
+     * @param params
+     * @throws Exception
+     */
+    public void insertLogin(Map<String,Object> params) throws Exception{
+        memberService.insertLoginLog(params);
+    }
+
+    public UUser phoneLogin(Map<String,Object> params) throws Exception{
+        return memberService.memberLogin(params);
     }
 }

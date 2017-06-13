@@ -13,14 +13,14 @@ import java.util.Map;
 public class RespData implements Serializable{
     private int status;
     private String message;
-    private Map<String,Object> data;
+    private Object data;
     private Long rspTime;
 
     public RespData(){
         super();
     }
 
-    public RespData(int status, String message, Map<String, Object> data, Long rspTime) {
+    public RespData(int status, String message, Object data, Long rspTime) {
         this.status = status;
         this.message = message;
         this.data = data;
@@ -43,11 +43,11 @@ public class RespData implements Serializable{
         this.message = message;
     }
 
-    public Map<String, Object> getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(Map<String, Object> data) {
+    public void setData(Object data) {
         this.data = data;
     }
 

@@ -1,7 +1,10 @@
 package com.zh;
 
+import com.zh.dubbo.core.shiro.cache.VCache;
+import com.zh.dubbo.utils.UniqIdUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -11,6 +14,11 @@ public class AppServerApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		try {
+			System.out.println("uuss==="+ UniqIdUtil.getUserId());
+		}catch (Exception e){
+
+		}
 	}
 
 }

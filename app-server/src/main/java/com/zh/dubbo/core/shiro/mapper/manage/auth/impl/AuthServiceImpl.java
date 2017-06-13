@@ -58,15 +58,14 @@ public class AuthServiceImpl implements AuthService {
             memberDao.updateMemeberInfoByPhone(mobile_phone,member_id);
             //3、更新手机变更表
             Map<String,Object> phoneRecord = new HashMap<>();
-            phoneRecord.put("member_id",member_id);
-            phoneRecord.put("last_mobile",mobile_phone_current);
-            phoneRecord.put("update_mobile",mobile_phone);
-            phoneRecord.put("add_time", DateUtil.getCurrentTime());
+            phoneRecord.put("memberId",member_id);
+            phoneRecord.put("lastMobile",mobile_phone_current);
+            phoneRecord.put("updateMobile",mobile_phone);
+            phoneRecord.put("addTime", DateUtil.getCurrentTime());
             memberDao.insertPhoneRecording(phoneRecord);
             //完成操作后结束否则继续执行，当前认证手机用户中手机号不存在的情况
             //根据用户id获取最新用户信息
             UUser member = memberDao.getMemberInfoById(member_id);
-            member.setPassword(null);
             member.setSalt(null);
             return member;
         }
@@ -96,6 +95,38 @@ public class AuthServiceImpl implements AuthService {
         member.setPassword(null);
         member.setSalt(null);
         return member;
+    }
+
+    @Override
+    public boolean isPhoneRegister(Map<String, Object> params) throws Exception {
+        if(params == null || params.size() == 0){
+            throw new Exception("参数列表不能为空！");
+        }
+        if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
+            throw new Exception("手机号不能为空");
+        }
+        //如果当前手机号是登陆名则返回false
+        UUser member_info = memberDao.getMemberInfoByLoginPhone(params.get("mobile_phone").toString());
+        if(member_info != null){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean isPhoneBind(Map<String, Object> params) throws Exception {
+        if(params == null || params.size() == 0){
+            throw new Exception("参数列表不能为空！");
+        }
+        if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
+            throw new Exception("手机号不能为空");
+        }
+        //如果当前手机号是认证手机号则返回false
+        UUser memberInfo = memberDao.getMemberInfoByPhone(params.get("mobile_phone").toString());
+        if(memberInfo != null){
+            return true;
+        }
+        return false;
     }
 
     @Override

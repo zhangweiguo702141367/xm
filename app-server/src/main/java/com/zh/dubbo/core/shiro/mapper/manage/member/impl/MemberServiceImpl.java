@@ -104,7 +104,6 @@ public class MemberServiceImpl implements MemberService {
         //获取用户信息
         UUser user = memberDao.getMemberInfoById(member.get("memberId").toString());
         user.setSalt(null);
-        user.setPassword(null);
         return user;
     }
 
@@ -213,17 +212,16 @@ public class MemberServiceImpl implements MemberService {
         }
         String login_name = params.get("login_name").toString();
         String password = params.get("password").toString();
-        Map<String,Object> saltMap = memberDao.getSaltByLoginName(login_name);
-        if(saltMap == null || saltMap.size() == 0){
-            throw new Exception("当前用户不存在");
-        }
-        String salt = saltMap.get("salt").toString();
-        String newPassword = SHAUtil.getPwd(password,salt,5);
-        UUser member = memberDao.getMemberInfoByUsernameAndPassword(login_name,newPassword);
+//        Map<String,Object> saltMap = memberDao.getSaltByLoginName(login_name);
+//        if(saltMap == null || saltMap.size() == 0){
+//            throw new Exception("当前用户不存在");
+//        }
+//        String salt = saltMap.get("salt").toString();
+//        String newPassword = SHAUtil.getPwd(password,salt,5);
+        UUser member = memberDao.getMemberInfoByUsernameAndPassword(login_name,password);
         if(member == null){
             throw new Exception("用户名密码不一致！请重新登录");
         }
-        member.setPassword(null);
         member.setSalt(null);
         return member;
     }

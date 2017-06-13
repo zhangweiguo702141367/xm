@@ -8,6 +8,7 @@ import org.apache.shiro.web.filter.AccessControlFilter;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,6 +37,13 @@ public class LoginFilter  extends AccessControlFilter {
 	protected boolean isAccessAllowed(ServletRequest request,
 			ServletResponse response, Object mappedValue) throws Exception {
 		System.out.println("enter loginfilter1");
+		//临时处理
+		HttpServletRequest httpRequest = ((HttpServletRequest)request);
+		String uri = httpRequest.getRequestURI();//获取URI
+		System.out.println(uri);
+		if(uri.startsWith("/inner/member")){
+			return Boolean.TRUE;
+		}
 		UUser token = (UUser) SecurityUtils.getSubject().getPrincipal();
 		
 		if(null != token || isLoginRequest(request, response)){// && isEnabled()

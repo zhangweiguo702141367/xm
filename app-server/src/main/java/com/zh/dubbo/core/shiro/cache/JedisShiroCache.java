@@ -83,7 +83,7 @@ public class JedisShiroCache<K, V> implements Cache<K, V> {
         V previos = get(key);
         try {
             jedisManager.saveValueByKey(DB_INDEX, SerializeUtil.serialize(buildCacheKey(key)),
-                    SerializeUtil.serialize(value), -1);
+                    SerializeUtil.serialize(value), 10800);
         } catch (Exception e) {
         	 LoggerUtils.error(SELF, "put cache throw exception",e);
         }

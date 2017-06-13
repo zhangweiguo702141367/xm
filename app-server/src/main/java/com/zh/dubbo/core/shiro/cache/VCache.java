@@ -462,4 +462,23 @@ public class VCache {
 //        版本问题
         jedis.close();
 	 }
+	public static Long genUniqIdByRedis(String key) throws Exception {
+		Jedis jedis = null;
+		boolean isBroken = false;
+		try {
+			jedis = J.getJedis();
+			Long val = jedis.incr(key);
+			if (val < 0L) {
+				val += Long.MAX_VALUE;
+			}
+			return val;
+		} catch (Exception e) {
+			e.printStackTrace();
+			isBroken = true;
+			System.out.println("genUniqIdByRedis"+e.getMessage());
+			throw e;
+		} finally {
+			returnResource(jedis, isBroken);
+		}
+	}
 }
