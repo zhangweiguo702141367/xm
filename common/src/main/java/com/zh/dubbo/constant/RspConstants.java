@@ -21,6 +21,7 @@ public class RspConstants {
     public final static int UNLOGIN =  206;
     //未授权
     public final static int UNAUTHOR = 207;
-
+    //业务异常
+    public final static int SERVICEERROR = 208;
 
 }

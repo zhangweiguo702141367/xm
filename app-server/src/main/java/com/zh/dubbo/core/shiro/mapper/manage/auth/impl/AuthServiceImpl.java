@@ -4,6 +4,7 @@ import com.zh.dubbo.core.shiro.mapper.dao.AuthDao;
 import com.zh.dubbo.core.shiro.mapper.dao.MemberDao;
 import com.zh.dubbo.core.shiro.mapper.manage.auth.AuthService;
 import com.zh.dubbo.entity.UUser;
+import com.zh.dubbo.exception.ProcException;
 import com.zh.dubbo.untils.DateUtil;
 import com.zh.dubbo.untils.MatchUtil;
 import org.slf4j.Logger;
@@ -35,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
             throw new Exception("用户id不能为空！");
         }
         if(params.get("member_phone") == null || "".equals(params.get("member_phone").toString())){
-            throw new Exception("认证手机号不能为空！");
+            throw new ProcException("认证手机号不能为空！");
         }
         String mobile_phone = params.get("member_phone").toString();
 
@@ -49,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
             String mobile_phone_current = memberInfo.getMobilePhone();
             //相同则抛异常返回
             if(mobile_phone_current.equals(mobile_phone)){
-                throw new Exception("请不要使用相同手机号认证");
+                throw new ProcException("请不要使用相同手机号认证");
             }
             //不同则做更新
             //1、更新用户表，如果当前手机号被认证则至为空
@@ -103,7 +104,7 @@ public class AuthServiceImpl implements AuthService {
             throw new Exception("参数列表不能为空！");
         }
         if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
-            throw new Exception("手机号不能为空");
+            throw new ProcException("手机号不能为空");
         }
         //如果当前手机号是登陆名则返回false
         UUser member_info = memberDao.getMemberInfoByLoginPhone(params.get("mobile_phone").toString());
@@ -119,7 +120,7 @@ public class AuthServiceImpl implements AuthService {
             throw new Exception("参数列表不能为空！");
         }
         if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
-            throw new Exception("手机号不能为空");
+            throw new ProcException("手机号不能为空");
         }
         //如果当前手机号是认证手机号则返回false
         UUser memberInfo = memberDao.getMemberInfoByPhone(params.get("mobile_phone").toString());
@@ -135,7 +136,7 @@ public class AuthServiceImpl implements AuthService {
             throw new Exception("参数列表不能为空！");
         }
         if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
-            throw new Exception("手机号不能为空");
+            throw new ProcException("手机号不能为空");
         }
         //如果当前手机号是登陆名则返回false
         UUser member_info = memberDao.getMemberInfoByLoginPhone(params.get("mobile_phone").toString());
@@ -157,11 +158,11 @@ public class AuthServiceImpl implements AuthService {
             throw new Exception("参数列表不能为空！");
         }
         if(params.get("email") == null || "".equals(params.get("email").toString())){
-            throw new Exception("邮件地址不能为空");
+            throw new ProcException("邮件地址不能为空");
         }
         String email = params.get("email").toString();
         if(!MatchUtil.checkEmail(email)){
-            throw new Exception("请输入正确的邮箱地址");
+            throw new ProcException("请输入正确的邮箱地址");
         }
         if(params.get("member_id") == null || "".equals(params.get("member_id").toString())){
             throw new Exception("用户id不能为空");
@@ -179,7 +180,7 @@ public class AuthServiceImpl implements AuthService {
             String email_current = memberInfo.getEmail();
             //相同则抛异常返回
             if(email_current.equals(email)){
-                throw new Exception("请不要使用相同邮箱认证");
+                throw new ProcException("请不要使用相同邮箱认证");
             }
             //不同则做更新
             //1、解绑已绑定这个邮箱的用户
@@ -235,7 +236,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean isEmailAuth(String email) throws Exception {
         if("".equals(email)){
-            throw new Exception("邮箱不能为空！");
+            throw new ProcException("邮箱不能为空！");
         }
         Map<String,Object> member_info = authDao.getMemberByEmail(email);
         if(member_info != null && member_info.size() != 0){

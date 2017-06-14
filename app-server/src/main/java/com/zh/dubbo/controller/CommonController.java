@@ -32,10 +32,7 @@ public class CommonController {
      */
     @GetMapping("/unlogin")
     public RespData unlogin(HttpServletRequest request){
-       RespData respData = new RespData();
-       respData.setStatus(RspConstants.REQUESTERROR);
-       respData.setRspTime(DateUtil.getCurrentTime());
-       return respData;
+        return RespData.create(RspConstants.UNLOGIN,"未登录",null,DateUtil.getCurrentTime());
     }
     @GetMapping("/login")
     public String test1(HttpServletRequest request){

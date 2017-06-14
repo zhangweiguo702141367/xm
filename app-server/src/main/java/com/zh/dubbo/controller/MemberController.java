@@ -6,6 +6,7 @@ import com.zh.dubbo.core.shiro.mapper.manage.auth.AuthService;
 import com.zh.dubbo.core.shiro.tooken.manager.TokenManager;
 import com.zh.dubbo.entity.RespData;
 import com.zh.dubbo.entity.UUser;
+import com.zh.dubbo.exception.ProcException;
 import com.zh.dubbo.fo.MemberServiceFo;
 import com.zh.dubbo.fo.SmsServiceFo;
 import com.zh.dubbo.untils.DateUtil;
@@ -47,30 +48,26 @@ public class MemberController {
      */
     @PostMapping("isPhone")
     public RespData isPhone(HttpServletRequest request){
-        RespData respData = new RespData();
+        System.out.println("enter here ");
         try {
             Map<String, Object> params = RequestUtil.getRequestMap(request);
             if(params == null || params.size() == 0){
                 throw new Exception("参数列表不能为空！");
             }
             if (params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())) {
-                throw new Exception("注册手机号不能为空!");
+                throw new ProcException("注册手机号不能为空!");
             }
             if(authService.isPhoneBind(params)){
-                throw new Exception("手机号已被绑定!");
+                throw new ProcException("手机号已被绑定!");
             }
             if(authService.isPhoneRegister(params)){
-                throw new Exception("手机号已注册!");
+                throw new ProcException("手机号已注册!");
             }
-            respData.setStatus(RspConstants.SUCCESS);
-            respData.setData("欢迎注册新用户");
-            respData.setRspTime(DateUtil.getCurrentTime());
-            return respData;
+            return RespData.create(RspConstants.SUCCESS,"欢迎注册新用户",null,DateUtil.getCurrentTime());
+        }catch (ProcException proc){
+            return RespData.create(RspConstants.SERVICEERROR,proc.getMessage(),null,DateUtil.getCurrentTime());
         }catch (Exception e){
-            respData.setMessage(e.getMessage());
-            respData.setStatus(RspConstants.OTHERERROR);
-            respData.setRspTime(DateUtil.getCurrentTime());
-            return respData;
+            return RespData.create(RspConstants.OTHERERROR,"操作异常，请您重试",null,DateUtil.getCurrentTime());
         }
     }
     /**
@@ -81,14 +78,13 @@ public class MemberController {
      */
     @PostMapping("getRegisterSmsCode")
     public RespData getRegisterSmsCode(HttpServletRequest request){
-        RespData respData = new RespData();
         try {
             Map<String, Object> params = RequestUtil.getRequestMap(request);
             if(params == null || params.size() == 0){
                 throw new Exception("参数列表不能为空！");
             }
             if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
-                throw new Exception("注册手机号不能为空!");
+                throw new ProcException("注册手机号不能为空!");
             }
             params.put("sms_template_nid","register");
             Map<String,Object> template_params = new HashMap<>();
@@ -99,15 +95,11 @@ public class MemberController {
             String rediskey = "register_phone_"+params.get("mobile_phone").toString();
             VCache.setex(rediskey,code,300);
             smsServiceFo.sendSms(params);
-            respData.setRspTime(DateUtil.getCurrentTime());
-            respData.setStatus(RspConstants.SUCCESS);
-            respData.setMessage("短信发送成功！");
-            return respData;
+            return RespData.create(RspConstants.SUCCESS,"短信发送成功",null,DateUtil.getCurrentTime());
+        }catch (ProcException proc){
+            return RespData.create(RspConstants.SERVICEERROR,proc.getMessage(),null,DateUtil.getCurrentTime());
         }catch (Exception e){
-            respData.setMessage(e.getMessage());
-            respData.setStatus(RspConstants.OTHERERROR);
-            respData.setRspTime(DateUtil.getCurrentTime());
-            return respData;
+            return RespData.create(RspConstants.OTHERERROR,"操作异常，请您重试",null,DateUtil.getCurrentTime());
         }
     }
     /**
@@ -118,23 +110,22 @@ public class MemberController {
      */
     @PostMapping("register")
     public RespData register(HttpServletRequest request){
-        RespData respData = new RespData();
         try {
             Map<String, Object> params = RequestUtil.getRequestMap(request);
             if(params == null || params.size() == 0){
                 throw new Exception("参数列表不能为空！");
             }
             if(params.get("code") == null || "".equals(params.get("code").toString())){
-                throw new Exception("请输入验证码！");
+                throw new ProcException("请输入验证码！");
             }
             String inoutCode = params.get("code").toString();
             String rediskey = "register_phone_"+params.get("mobile_phone").toString();
             String code = VCache.get(rediskey);
             if(code == null || "".equals(code)){
-                throw new Exception("验证码已过期，请重新获取验证码！");
+                throw new ProcException("验证码已过期，请重新获取验证码！");
             }
             if(!code.equals(inoutCode)){
-                throw new Exception("验证码输入有误，请您重新输入验证码！");
+                throw new ProcException("验证码输入有误，请您重新输入验证码！");
             }
             String ip = IPUtil.getIpAddr(request);
             params.put("user_id", UniqIdUtil.getUserId());
@@ -154,23 +145,18 @@ public class MemberController {
             }catch (Exception e){
 
             }
-            respData.setRspTime(DateUtil.getCurrentTime());
-            respData.setStatus(RspConstants.SUCCESS);
-            respData.setMessage("用户创建成功！");
-            return respData;
+            return RespData.create(RspConstants.SUCCESS,"用户创建成功！",null,DateUtil.getCurrentTime());
+        }catch (ProcException proc){
+            return RespData.create(RspConstants.SERVICEERROR,proc.getMessage(),null,DateUtil.getCurrentTime());
         }catch (Exception e){
             if(e.getMessage().indexOf("login_name")>0){
-                respData.setMessage("注册手机号已存在！");
+                return RespData.create(RspConstants.SERVICEERROR,"注册手机号已存在",null,DateUtil.getCurrentTime());
             }else if(e.getMessage().indexOf("mobile_phone")>0){
-                respData.setMessage("注册手机号已存在！");
+                return RespData.create(RspConstants.SERVICEERROR,"注册手机号已存在",null,DateUtil.getCurrentTime());
             }else if(e.getMessage().indexOf("nick_name")>0){
-                respData.setMessage("昵称不能重复！");
-            }else {
-                respData.setMessage(e.getMessage());
+                return RespData.create(RspConstants.SERVICEERROR,"昵称不能重复",null,DateUtil.getCurrentTime());
             }
-            respData.setStatus(RspConstants.OTHERERROR);
-            respData.setRspTime(DateUtil.getCurrentTime());
-            return respData;
+            return RespData.create(RspConstants.OTHERERROR,"操作异常，请您重试",null,DateUtil.getCurrentTime());
         }
     }
     /**
@@ -180,14 +166,13 @@ public class MemberController {
      */
     @PostMapping("getSmsCode")
     public RespData sendSmsCode(HttpServletRequest request){
-        RespData respData = new RespData();
         try {
             Map<String, Object> params = RequestUtil.getRequestMap(request);
             if(params == null || params.size() == 0){
                 throw new Exception("参数列表不能为空！");
             }
             if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
-                throw new Exception("用户名不能为空!");
+                throw new ProcException("用户名不能为空!");
             }
             params.put("sms_template_nid","register");
             Map<String,Object> template_params = new HashMap<>();
@@ -198,15 +183,11 @@ public class MemberController {
             String rediskey = "forgetpassword_phone_"+params.get("mobile_phone").toString();
             VCache.setex(rediskey,code,300);
             smsServiceFo.sendSms(params);
-            respData.setRspTime(DateUtil.getCurrentTime());
-            respData.setStatus(RspConstants.SUCCESS);
-            respData.setMessage("短信发送成功！");
-            return respData;
+            return RespData.create(RspConstants.SUCCESS,"短信发送成功！",null,DateUtil.getCurrentTime());
+        }catch (ProcException proc){
+            return RespData.create(RspConstants.SERVICEERROR,proc.getMessage(),null,DateUtil.getCurrentTime());
         }catch (Exception e){
-            respData.setMessage(e.getMessage());
-            respData.setStatus(RspConstants.OTHERERROR);
-            respData.setRspTime(DateUtil.getCurrentTime());
-            return respData;
+            return RespData.create(RspConstants.OTHERERROR,"操作异常，请您重试",null,DateUtil.getCurrentTime());
         }
     }
     /**
@@ -225,19 +206,19 @@ public class MemberController {
                 throw new Exception("参数列表不能为空！");
             }
             if(params.get("login_name") == null || "".equals(params.get("login_name").toString())){
-                throw new Exception("用户名不能为空!");
+                throw new ProcException("用户名不能为空!");
             }
             if(params.get("code") == null || "".equals(params.get("code").toString())){
-                throw new Exception("请输入验证码！");
+                throw new ProcException("请输入验证码！");
             }
             String inoutCode = params.get("code").toString();
             String rediskey = "forgetpassword_phone_"+params.get("login_name").toString();
             String code = VCache.get(rediskey);
             if(code == null || "".equals(code)){
-                throw new Exception("验证码已过期，请重新获取验证码！");
+                throw new ProcException("验证码已过期，请重新获取验证码！");
             }
             if(!code.equals(inoutCode)){
-                throw new Exception("验证码输入有误，请您重新输入验证码！");
+                throw new ProcException("验证码输入有误，请您重新输入验证码！");
             }
             UUser user = memberServiceFo.getMmeberInfoByLoginName(params.get("login_name").toString());
             if(user == null){
@@ -245,17 +226,13 @@ public class MemberController {
             }
             params.put("member_id",user.getId());
             memberServiceFo.updateMemberPassword(params);
-            respData.setRspTime(DateUtil.getCurrentTime());
-            respData.setStatus(RspConstants.SUCCESS);
-            respData.setMessage("修改密码成功！");
             //修改为密码后删除redis对应键值对
             VCache.delByKey(rediskey);
-            return respData;
+            return RespData.create(RspConstants.SUCCESS,"修改密码成功！",null,DateUtil.getCurrentTime());
+        }catch (ProcException proc){
+            return RespData.create(RspConstants.SERVICEERROR,proc.getMessage(),null,DateUtil.getCurrentTime());
         }catch (Exception e){
-            respData.setMessage(e.getMessage());
-            respData.setStatus(RspConstants.OTHERERROR);
-            respData.setRspTime(DateUtil.getCurrentTime());
-            return respData;
+            return RespData.create(RspConstants.OTHERERROR,"操作异常，请您重试",null,DateUtil.getCurrentTime());
         }
     }
 
@@ -273,14 +250,14 @@ public class MemberController {
                 throw new Exception("参数列表不能为空！");
             }
             if(params.get("login_name") == null || "".equals(params.get("login_name").toString())){
-                throw new  Exception("登录名不能为空！");
+                throw new  ProcException("登录名不能为空！");
             }
             if(params.get("password") == null || "".equals(params.get("password").toString())){
-                throw new Exception("登录密码不能为空！");
+                throw new ProcException("登录密码不能为空！");
             }
             UUser member = memberServiceFo.getMmeberInfoByLoginName(params.get("login_name").toString());
             if(member == null){
-                throw new Exception("当前用户不存在");
+                throw new ProcException("当前用户不存在");
             }
             String salt = member.getSalt();
             String newPassword = SHAUtil.getPwd(params.get("password").toString(),salt,5);
@@ -298,31 +275,20 @@ public class MemberController {
             }
 //            System.out.println("aaaaaaaaaa==="+SecurityUtils.getSubject().getPrincipal().toString());
             System.out.println(TokenManager.getToken().toString());
-            respData.setData("登录成功！");
-            respData.setStatus(RspConstants.SUCCESS);
-            respData.setRspTime(DateUtil.getCurrentTime());
-            return respData;
+            return RespData.create(RspConstants.SUCCESS,"登录成功",null,DateUtil.getCurrentTime());
+        }catch (ProcException proc){
+            return RespData.create(RspConstants.SERVICEERROR,proc.getMessage(),null,DateUtil.getCurrentTime());
         }catch (Exception e){
-            respData.setMessage(e.getMessage());
-            respData.setStatus(RspConstants.OTHERERROR);
-            respData.setRspTime(DateUtil.getCurrentTime());
-            return respData;
+            return RespData.create(RspConstants.OTHERERROR,"操作异常，请您重试",null,DateUtil.getCurrentTime());
         }
     }
     @PostMapping("logout")
     public RespData logout(HttpServletRequest request){
-        RespData respData = new RespData();
         try {
             TokenManager.logout();
-            respData.setData("退出成功！");
-            respData.setStatus(RspConstants.SUCCESS);
-            respData.setRspTime(DateUtil.getCurrentTime());
-            return respData;
+            return RespData.create(RspConstants.SUCCESS,"退出成功",null,DateUtil.getCurrentTime());
         }catch (Exception e){
-            respData.setMessage(e.getMessage());
-            respData.setStatus(RspConstants.OTHERERROR);
-            respData.setRspTime(DateUtil.getCurrentTime());
-            return respData;
+            return RespData.create(RspConstants.OTHERERROR,"操作异常，请您重试",null,DateUtil.getCurrentTime());
         }
     }
 
