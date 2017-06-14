@@ -17,4 +17,10 @@ public class RspConstants {
     public final static int SQLERROR = 204;
     //其他异常
     public final static int OTHERERROR = 205;
+    //未登录
+    public final static int UNLOGIN =  206;
+    //未授权
+    public final static int UNAUTHOR = 207;
+
+
 }

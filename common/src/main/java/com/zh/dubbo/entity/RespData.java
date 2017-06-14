@@ -26,7 +26,15 @@ public class RespData implements Serializable{
         this.data = data;
         this.rspTime = rspTime;
     }
-
+    //自动创建返回值
+    public static RespData create(int status, String message, Object data,Long rspTime) {
+        RespData respData = new RespData();
+        respData.status = status;
+        respData.message = message;
+        respData.data = data;
+        respData.rspTime = rspTime;
+        return respData;
+    }
     public int getStatus() {
         return status;
     }
