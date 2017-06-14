@@ -54,4 +54,7 @@ public class MemberServiceFo {
     public UUser phoneLogin(Map<String,Object> params) throws Exception{
         return memberService.memberLogin(params);
     }
+    public UUser getMemberInfoByUsernameAndMemberId(String login_name,String member_id) throws Exception{
+        return memberService.getMemberInfoByUsernameAndMemberId(login_name,member_id);
+    }
 }

@@ -48,7 +48,7 @@ public interface CommonDao {
      * 插入email发送日志
      * @param emailLog
      */
-    @Insert("INSERT INTO sys_email_log(to_email,from_email,subject,html_body,text_body,from_alias,request_data,response_data,is_batch,is_attachment,attachment,env,batch_emails,create_time,send_status) VALUES(" +
-            "#{to_email},#{from_email},#{subject},#{html_body},#{text_body},#{from_alias},#{request_data},#{response_data},#{is_batch},#{is_attachment},#{attachment},#{env},#{batch_emails},#{create_time},#{send_status})")
+    @Insert("INSERT INTO sys_email_log(to_email,member_id,from_email,subject,html_body,text_body,from_alias,request_data,response_data,is_batch,is_attachment,attachment,env,batch_emails,create_time,send_status) VALUES(" +
+            "#{to_email},#{member_id},#{from_email},#{subject},#{html_body},#{text_body},#{from_alias},#{request_data},#{response_data},#{is_batch},#{is_attachment},#{attachment},#{env},#{batch_emails},#{create_time},#{send_status})")
     void insetEmailLog(Map<String, Object> emailLog);
 }

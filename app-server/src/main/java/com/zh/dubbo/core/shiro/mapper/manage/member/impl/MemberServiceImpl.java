@@ -232,5 +232,10 @@ public class MemberServiceImpl implements MemberService {
         return memberDao.getMemberInfoByLoginPhone(login_name);
     }
 
+    @Override
+    public UUser getMemberInfoByUsernameAndMemberId(String login_name, String member_id) throws Exception {
+        return memberDao.getMemberInfoByUsernameAndMemberId(login_name,member_id);
+    }
+
 
 }

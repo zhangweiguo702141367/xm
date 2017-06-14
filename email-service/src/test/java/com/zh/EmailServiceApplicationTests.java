@@ -30,8 +30,8 @@ public class EmailServiceApplicationTests {
     @Test
     public void contextLoads() {
     }
-//    @Autowired
-//	EmailAliyunService emailAliyunService;
+    @Autowired
+	EmailAliyunService emailAliyunService;
 //	@Test
 //	public void attc(){
 //		Map<String,Object> params = new HashMap<String,Object>();
@@ -58,7 +58,7 @@ public class EmailServiceApplicationTests {
 //		params.put("to_email","zhangwg@baihe.com");
 //		Map<String,Object> template_param = new HashMap<String,Object>();
 //		template_param.put("code","123456");
-////		params.put("template_param",template_param);
+//		params.put("template_param",template_param);
 //		try{
 //			emailAliyunService.emailSingleSend(params);
 //		}catch (Exception e){
@@ -72,7 +72,7 @@ public class EmailServiceApplicationTests {
 //		params.put("to_email","zhangwg@baihe.com;702141367@qq.com");
 //		Map<String,Object> template_param = new HashMap<String,Object>();
 //		template_param.put("code","123456");
-////		params.put("template_param",template_param);
+//		params.put("template_param",template_param);
 //		try{
 //			emailAliyunService.emailBatchSend(params);
 //		}catch (Exception e){

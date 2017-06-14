@@ -28,4 +28,17 @@ public interface EmailService {
      * @throws Exception
      */
     public Map<String,Object> emailSendAttachment(Map<String,Object> params) throws Exception;
+
+    /**
+     * 获取邮箱认证私钥
+     * @return
+     * @throws Exception
+     */
+    public String getPrivateRsa() throws Exception;
+    /**
+     * 获取邮箱认证公钥
+     * @return
+     * @throws Exception
+     */
+    public String getPublicRsa() throws Exception;
 }

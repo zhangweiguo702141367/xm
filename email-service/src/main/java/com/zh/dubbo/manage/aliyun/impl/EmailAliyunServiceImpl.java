@@ -42,6 +42,9 @@ public class EmailAliyunServiceImpl implements EmailAliyunService {
         if(params == null || params.size() == 0){
             throw new Exception("参数列表不能为空！");
         }
+        if(params.get("member_id") == null || "".equals(params.get("member_id").toString())){
+            throw new Exception("用户id不能为空！");
+        }
         if(params.get("template_nid") == null || "".equals(params.get("template_nid").toString())){
             throw new Exception("邮件模版nid不能为空！");
         }
@@ -114,6 +117,7 @@ public class EmailAliyunServiceImpl implements EmailAliyunService {
         logMap.put("is_attachment",2);
         logMap.put("create_time", DateUtil.getCurrentTime());
         logMap.put("env",env);
+        logMap.put("member_id",params.get("member_id"));
         if("dev".equals(env)){
             logMap.put("send_status",1);
             commonDao.insetEmailLog(logMap);
@@ -184,6 +188,9 @@ public class EmailAliyunServiceImpl implements EmailAliyunService {
         if(params == null || params.size() == 0){
             throw new Exception("参数列表不能为空！");
         }
+        if(params.get("member_id") == null || "".equals(params.get("member_id").toString())){
+            throw new Exception("用户id不能为空！");
+        }
         if(params.get("template_nid") == null || "".equals(params.get("template_nid").toString())){
             throw new Exception("邮件模版nid不能为空！");
         }
@@ -247,6 +254,7 @@ public class EmailAliyunServiceImpl implements EmailAliyunService {
         logMap.put("batch_emails",to_email);
         logMap.put("create_time", DateUtil.getCurrentTime());
         logMap.put("env",env);
+        logMap.put("member_id",params.get("member_id").toString());
         if("dev".equals(env)){
             logMap.put("send_status",1);
             commonDao.insetEmailLog(logMap);
@@ -320,6 +328,9 @@ public class EmailAliyunServiceImpl implements EmailAliyunService {
         Map<String,Object> logMap = new HashMap<>();
         if(params == null || params.size() == 0){
             throw new Exception("参数列表不能为空！");
+        }
+        if(params.get("member_id") == null || "".equals(params.get("member_id").toString())){
+            throw new Exception("用户id不能为空！");
         }
         if(params.get("template_nid") == null || "".equals(params.get("template_nid").toString())){
             throw new Exception("邮件模版nid不能为空！");
@@ -397,6 +408,7 @@ public class EmailAliyunServiceImpl implements EmailAliyunService {
         logMap.put("batch_emails",to_email);
         logMap.put("create_time", DateUtil.getCurrentTime());
         logMap.put("env",env);
+        logMap.put("member_id",params.get("member_id"));
         if("dev".equals(env)){
             logMap.put("send_status",1);
             commonDao.insetEmailLog(logMap);

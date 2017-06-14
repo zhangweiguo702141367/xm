@@ -48,7 +48,6 @@ public class MemberController {
      */
     @PostMapping("isPhone")
     public RespData isPhone(HttpServletRequest request){
-        System.out.println("enter here ");
         try {
             Map<String, Object> params = RequestUtil.getRequestMap(request);
             if(params == null || params.size() == 0){

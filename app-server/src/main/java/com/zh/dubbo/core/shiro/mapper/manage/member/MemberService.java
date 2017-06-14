@@ -43,4 +43,13 @@ public interface MemberService {
      * @throws Exception
      */
     public UUser getMmeberInfoByLoginName(String login_name) throws Exception;
+
+    /**
+     * 根据用户名和用户id获取用户信息
+     * @param login_name
+     * @param member_id
+     * @return
+     * @throws Exception
+     */
+    public UUser getMemberInfoByUsernameAndMemberId(String login_name,String member_id) throws Exception;
 }

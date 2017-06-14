@@ -58,7 +58,7 @@ public class RSATest {
         /***************************公钥解签************************************************/
         System.err.println("私钥加密——公钥解密");
         String source = "这是一行测试RSA数字签名的无意义文字";
-        System.out.println("原文字：\r\n" + Base64.encodeToString(source.getBytes(),true));
+//        System.out.println("原文字：\r\n" + Base64.encodeToString(source.getBytes(),true));
         byte[] data = source.getBytes();
         byte[] encodedData = RsaUtil.encryptByPrivateKey(data, privateKey);
         System.out.println("加密后：\r\n" + Base64.encodeToString(encodedData,true));

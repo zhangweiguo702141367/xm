@@ -24,4 +24,16 @@ public interface CommonService {
      * @throws Exception
      */
         public EmailTemplate getTemplateByNid(String nid) throws Exception;
+    /**
+     * 获取邮箱认证私钥
+     * @return
+     * @throws Exception
+     */
+    public String getPrivateRsa() throws Exception;
+    /**
+     * 获取邮箱认证公钥
+     * @return
+     * @throws Exception
+     */
+    public String getPublicRsa() throws Exception;
 }

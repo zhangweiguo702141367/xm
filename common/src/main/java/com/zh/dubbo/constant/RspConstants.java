@@ -23,5 +23,7 @@ public class RspConstants {
     public final static int UNAUTHOR = 207;
     //业务异常
     public final static int SERVICEERROR = 208;
+    //需要用户确认的
+    public final static int CONFIRM = 209;
 
 }

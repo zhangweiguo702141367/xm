@@ -1,5 +1,8 @@
 package com.zh.dubbo.untils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -11,6 +14,7 @@ import java.util.Set;
  * Created by 70214 on 2017/4/25.
  */
 public class RequestUtil {
+    private static Logger logger = LoggerFactory.getLogger(RequestUtil.class);
     /**
      * 格式化请求参数，去重，去空。
      * post请求方式
@@ -74,5 +78,29 @@ public class RequestUtil {
         }
         return formMap;
     }
+    /**
+     * 查看map中是否具备所有的必填项。
+     *
+     * @param params 请求参数列表
+     * @param keys   必填项列表
+     * @return boolean 是否包含全部的必填项
+     */
+    public static boolean hasAllKey(Map<String, Object> params, String[] keys) {
+        if (params == null) {
+            logger.error("PabUtil.hasAllKey: params is null");
+            return false;
+        }
 
+        if (keys == null || keys.length == 0)
+            return true;
+
+        for (String key : keys) {
+            if (params.get(key) == null) {
+                logger.error("PabUtil.hasAllKey: params missing [" + key + "]");
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
