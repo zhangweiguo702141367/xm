@@ -2,6 +2,7 @@ package com.zh;
 
 import com.zh.dubbo.core.shiro.cache.VCache;
 import com.zh.dubbo.fo.EmailServiceFo;
+import com.zh.dubbo.fo.WeatherServiceFo;
 import com.zh.dubbo.utils.UniqIdUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,6 +15,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class AppServerApplicationTests {
 	@Autowired
 	EmailServiceFo emailServiceFo;
+	@Autowired
+	WeatherServiceFo weatherServiceFo;
 	@Test
 	public void contextLoads() {
 		try {
@@ -41,6 +44,14 @@ public class AppServerApplicationTests {
 					"1FALIclrnATnvKSK1aUrpaASD/+XZM5XPZEMDn9sRqLRfTUa+vWx6cxAo266yew664XWjeZsjsOn\n" +
 					"jSoC1uXc2e2DFhOhBXE=";
 			emailServiceFo.design(token,sign);
+		}catch (Exception e){
+			System.out.println(e.getMessage());
+		}
+	}
+	@Test
+	public void getWeather(){
+		try{
+			System.out.println("当前的天气状况是============\n"+weatherServiceFo.getWeatherInfoByIp("33","106.39.84.154"));
 		}catch (Exception e){
 			System.out.println(e.getMessage());
 		}

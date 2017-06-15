@@ -44,7 +44,7 @@ public class LoginFilter  extends AccessControlFilter {
 		if(uri.startsWith("/inner/member")){
 			return Boolean.TRUE;
 		}
-		if(uri.startsWith("/inner/email")){
+		if(uri.startsWith("/inner/email/e")){
 			return Boolean.TRUE;
 		}
 		UUser token = (UUser) SecurityUtils.getSubject().getPrincipal();

@@ -24,54 +24,54 @@ public class WeatherServiceApplicationTests {
 	@Test
 	public void contextLoads() {
 		try {
-			System.out.println(openWeatherService.getWeatherByCityCode("101010100","12345"));
+//			System.out.println(openWeatherService.getWeatherByCityCode("101010100","12345"));
 		}catch (Exception e){
 			System.out.println(e.getMessage());
 		}
 	}
-	//json方式
-    @Test
-	public void getWeatherByCityName(){
-		try{
-			System.out.println(openWeatherService.getWeatherByCityName("北京市","12346"));
-		}catch (Exception e){
-			System.out.println(e.getMessage());
-		}
-	}
-	@Test
-	public void getWeatherXmlByCityName(){
-		try{
-			Map result = openWeatherXmlService.getWeatherXmlByCityName("北京市","12347");
-//			List<Map<String,Object>> zhishus = (List<Map<String,Object>>) result.get("zhishus");
-//			for (Map zhishu:zhishus) {
-				System.out.println(result);
-//			}
-		}catch (Exception e){
-			System.out.println(e.getMessage());
-		}
-	}
-	@Test
-	public void getWeatherXmlByCityCode(){
-		try{
-			System.out.println(openWeatherXmlService.getWeatherXmlByCityCode("101010100","12348"));
-		}catch (Exception e){
-			System.out.println(e.getMessage());
-		}
-	}
-	@Test
-	public void updateCityCode(){
-		try{
-			cityCodeService.updateCityCode();
-		}catch (Exception e){
-			System.out.println(e.getMessage());
-		}
-	}
-	@Test
-	public void getCityCode(){
-		try{
-			System.out.println("citycode===="+cityCodeService.getCityCodeByProvinceAndCity("山西","晋中市"));
-		}catch (Exception e){
-			System.out.println(e.getMessage());
-		}
-	}
+//	//json方式
+//    @Test
+//	public void getWeatherByCityName(){
+//		try{
+//			System.out.println(openWeatherService.getWeatherByCityName("北京市","12346"));
+//		}catch (Exception e){
+//			System.out.println(e.getMessage());
+//		}
+//	}
+//	@Test
+//	public void getWeatherXmlByCityName(){
+//		try{
+//			Map result = openWeatherXmlService.getWeatherXmlByCityName("北京市","12347");
+////			List<Map<String,Object>> zhishus = (List<Map<String,Object>>) result.get("zhishus");
+////			for (Map zhishu:zhishus) {
+//				System.out.println(result);
+////			}
+//		}catch (Exception e){
+//			System.out.println(e.getMessage());
+//		}
+//	}
+//	@Test
+//	public void getWeatherXmlByCityCode(){
+//		try{
+//			System.out.println(openWeatherXmlService.getWeatherXmlByCityCode("101010100","12348"));
+//		}catch (Exception e){
+//			System.out.println(e.getMessage());
+//		}
+//	}
+//	@Test
+//	public void updateCityCode(){
+//		try{
+//			cityCodeService.updateCityCode();
+//		}catch (Exception e){
+//			System.out.println(e.getMessage());
+//		}
+//	}
+//	@Test
+//	public void getCityCode(){
+//		try{
+//			System.out.println("citycode===="+cityCodeService.getCityCodeByProvinceAndCity("山西","晋中市"));
+//		}catch (Exception e){
+//			System.out.println(e.getMessage());
+//		}
+//	}
 }

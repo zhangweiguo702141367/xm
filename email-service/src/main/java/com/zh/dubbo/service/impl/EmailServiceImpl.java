@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * Created by 70214 on 2017/6/3.
  */
-@Service(protocol = { "dubbo" },version = "1.0.1")
+@Service(protocol = { "dubbo" })
 public class EmailServiceImpl implements EmailService{
     @Autowired
     EmailAliyunService emailAliyunService;

@@ -35,7 +35,7 @@ public class EmailController {
      * @param request
      * @return
      */
-    @PostMapping("e/isEmailAuth")
+    @PostMapping("isEmailAuth")
     public RespData isEmailAuth(HttpServletRequest request){
         try {
             Map<String, Object> params = RequestUtil.getRequestMap(request);
@@ -62,7 +62,7 @@ public class EmailController {
      * @param request
      * @return
      */
-    @PostMapping("e/sendAuthEmail")
+    @PostMapping("sendAuthEmail")
     public RespData sendAuthEmail(HttpServletRequest request){
         try {
             Map<String, Object> params = RequestUtil.getRequestMap(request);
@@ -121,6 +121,30 @@ public class EmailController {
             //做登录
             TokenManager.login(user,Boolean.FALSE);
             return RespData.create(RspConstants.SUCCESS,"邮箱认证成功",null, DateUtil.getCurrentTime());
+        }catch (ProcException proc){
+            return RespData.create(RspConstants.SERVICEERROR,proc.getMessage(),null,DateUtil.getCurrentTime());
+        }catch (Exception e){
+            return RespData.create(RspConstants.OTHERERROR,"操作异常，请您重试",null,DateUtil.getCurrentTime());
+        }
+    }
+    /**
+     * 获取当前用户有没有绑定邮箱
+     * @param request
+     * @return
+     */
+    @PostMapping("e/isMemberAuthEmail")
+    public RespData authEisMemberAuthEmailmail(HttpServletRequest request){
+        try {
+            Map<String, Object> params = RequestUtil.getRequestMap(request);
+            if(params == null || params.size() == 0){
+                throw new Exception("参数列表不能为空！");
+            }
+            if (params.get("login_name") == null || "".equals(params.get("login_name").toString())) {
+                throw new ProcException("用户登录名不能为空！");
+            }
+            String login_name = params.get("login_name").toString();
+            boolean isAuth = emailServiceFo.isMemberEmailAuth(login_name);
+            return RespData.create(RspConstants.SUCCESS,"继续修改密码操作吧",isAuth, DateUtil.getCurrentTime());
         }catch (ProcException proc){
             return RespData.create(RspConstants.SERVICEERROR,proc.getMessage(),null,DateUtil.getCurrentTime());
         }catch (Exception e){

@@ -27,10 +27,12 @@ import java.util.Map;
 public class EmailServiceFo {
     @Value("${email.expire.time}")
     private String expire_time;
-    @Reference(version = "1.0.1")
+    @Reference
     EmailService emailService;
     @Autowired
     AuthService authService;
+    @Autowired
+    MemberServiceFo memberServiceFo;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
     public boolean isEmailAuth(String email) throws Exception{
@@ -124,5 +126,18 @@ public class EmailServiceFo {
             throw new ProcException("token已失效，请重新获取邮件");
         }
         return signMap;
+    }
+    public Boolean isMemberEmailAuth(String login_name) throws Exception{
+        if("".equals(login_name)){
+            throw new Exception("缺少必填项！");
+        }
+        UUser user = memberServiceFo.getMmeberInfoByLoginName(login_name);
+        if(user == null){
+            throw new ProcException("获取用户信息异常");
+        }
+        if(user.getIsEmail() == 1){
+            return Boolean.TRUE;
+        }
+        return Boolean.FALSE;
     }
 }

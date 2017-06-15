@@ -1,4 +1,4 @@
-package com.zh.config;
+package com.zh.dubbo.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;

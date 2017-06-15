@@ -1,4 +1,4 @@
-package com.zh.entity;
+package com.zh.dubbo.entity;
 
 import org.springframework.stereotype.Component;
 

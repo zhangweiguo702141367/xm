@@ -1,4 +1,4 @@
-package com.zh.utils;
+package com.zh.dubbo.utils;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;

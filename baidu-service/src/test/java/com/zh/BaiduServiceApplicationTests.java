@@ -1,6 +1,6 @@
 package com.zh;
 
-import com.zh.manage.baiduMap.BaiDuMapService;
+import com.zh.dubbo.manage.baiduMap.BaiDuMapService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
