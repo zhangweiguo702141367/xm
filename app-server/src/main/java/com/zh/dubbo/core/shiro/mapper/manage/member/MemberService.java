@@ -52,4 +52,20 @@ public interface MemberService {
      * @throws Exception
      */
     public UUser getMemberInfoByUsernameAndMemberId(String login_name,String member_id) throws Exception;
+    /**
+     * 根据用户登录名和绑定手机号判断用户是否合法
+     * @param login_name
+     * @param mobile_phone
+     * @return
+     * @throws Exception
+     */
+    public Boolean isLegalByLoginNameAndMobilePhone(String login_name,String mobile_phone) throws Exception;
+    /**
+     * 根据用户登录名和邮箱判断用户合法性
+     * @param login_name
+     * @param email
+     * @return
+     * @throws Exception
+     */
+    public Boolean isLegalByLoginNameAndEmail(String login_name,String email) throws Exception;
 }

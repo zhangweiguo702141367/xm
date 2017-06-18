@@ -54,7 +54,29 @@ public class MemberServiceFo {
     public UUser phoneLogin(Map<String,Object> params) throws Exception{
         return memberService.memberLogin(params);
     }
+
     public UUser getMemberInfoByUsernameAndMemberId(String login_name,String member_id) throws Exception{
         return memberService.getMemberInfoByUsernameAndMemberId(login_name,member_id);
+    }
+
+    /**
+     * 根据用户名和认证手机号判断用户是否合法
+     * @param login_name
+     * @param mobile_phone
+     * @return
+     * @throws Exception
+     */
+    public Boolean isLegalByLoginNameAndMobilePhone(String login_name,String mobile_phone) throws Exception{
+        return memberService.isLegalByLoginNameAndMobilePhone(login_name,mobile_phone);
+    }
+    /**
+     * 根据用户名和邮箱判断用户是否合法
+     * @param login_name
+     * @param email
+     * @return
+     * @throws Exception
+     */
+    public Boolean isLegalByLoginNameAndEmail(String login_name,String email) throws Exception{
+        return memberService.isLegalByLoginNameAndEmail(login_name,email);
     }
 }

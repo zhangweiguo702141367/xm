@@ -36,16 +36,12 @@ public class MemberServiceImpl implements MemberService {
         if(params.get("user_id") == null || "".equals(params.get("user_id").toString())){
             throw new ProcException("用户系统Id不能为空！");
         }
-        if(params.get("nick_name") == null || "".equals(params.get("nick_name").toString())){
-            throw new ProcException("用户昵称不能为空！");
-        }
-        if(params.get("login_ip") == null || "".equals(params.get("nick_name").toString())){
+        if(params.get("login_ip") == null || "".equals(params.get("login_ip").toString())){
             throw new ProcException("用户注册IP不能为空！");
         }
 //        if(params.get("login_name") == null || "".equals(params.get("login_name").toString())){
 //            throw new Exception("登陆名不能为空！");
 //        }
-        String nickName = params.get("nick_name").toString();
         //正则校验昵称只能为因为字符
         if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
             throw new ProcException("注册手机号不能为空");
@@ -54,6 +50,7 @@ public class MemberServiceImpl implements MemberService {
             throw new ProcException("登录密码不能为空！");
         }
         String mobilePhone = params.get("mobile_phone").toString();
+        String nickName = RandomUtil.getStringRandom(4) + mobilePhone;
         //正则校验手机号格式
         if(!MatchUtil.checkPhone(mobilePhone)){
             throw new ProcException("请输入正确的手机号！");
@@ -79,7 +76,7 @@ public class MemberServiceImpl implements MemberService {
         member.put("salt",salt);
         member.put("password", SHAUtil.getPwd(params.get("password").toString(),salt,5));
         member.put("loginName",mobilePhone);
-        member.put("nickName",nickName);
+        member.put("nickName",nickName.toLowerCase());
         member.put("mobilePhone",mobilePhone);
         member.put("headImage","http://www.lxiaomei.com/nginx-logo.png");
         member.put("isMobile",1);
@@ -235,6 +232,24 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public UUser getMemberInfoByUsernameAndMemberId(String login_name, String member_id) throws Exception {
         return memberDao.getMemberInfoByUsernameAndMemberId(login_name,member_id);
+    }
+
+    @Override
+    public Boolean isLegalByLoginNameAndMobilePhone(String login_name, String mobile_phone) throws Exception {
+        UUser user = memberDao.getMemberInfoByLoginNameAndMobilePhone(login_name,mobile_phone);
+        if(user != null){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean isLegalByLoginNameAndEmail(String login_name, String email) throws Exception {
+        UUser user = memberDao.getMemberInfoByLoginNameAndEmail(login_name,email);
+        if(user != null){
+            return true;
+        }
+        return false;
     }
 
 

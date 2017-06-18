@@ -176,8 +176,6 @@ public interface MemberDao {
     public Map<String,Object> getLastChangePhoneById(@Param("member_id") String member_id);
     /**
      * 根据用户登录名和id去获取用户信息
-     * @param login_name
-     * @param password
      * @return
      */
     @Results({
@@ -199,5 +197,55 @@ public interface MemberDao {
     })
     @Select("SELECT * FROM zh_member.mb_member WHERE login_name=#{login_name} AND id=#{memebr_id}")
     public UUser getMemberInfoByUsernameAndMemberId(@Param("login_name") String login_name, @Param("memebr_id") String memebr_id);
+    /**
+     * 根据用户登录名和认证手机号去获取用户信息
+     * @param login_name
+     * @param mobile_phone
+     * @return
+     */
+    @Results({
+            @Result(property = "loginName", column = "login_name"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "nickName", column = "nick_name"),
+            @Result(property = "mobilePhone", column = "mobile_phone"),
+            @Result(property = "headImage", column = "head_image"),
+            @Result(property = "isMobile", column = "is_mobile"),
+            @Result(property = "isEmail", column = "is_email"),
+            @Result(property = "isIdentity", column = "is_identity"),
+            @Result(property = "lastLoginTime", column = "last_login_time"),
+            @Result(property = "lastLoginDate", column = "last_login_date"),
+            @Result(property = "registerTime", column = "register_time"),
+            @Result(property = "registerDate", column = "register_date"),
+            @Result(property = "spreadId", column = "spread_id"),
+            @Result(property = "roleId", column = "role_id"),
+            @Result(property = "addTime", column = "add_time"),
+    })
+    @Select("SELECT * FROM zh_member.mb_member WHERE login_name=#{login_name} AND mobile_phone=#{mobile_phone}")
+    public UUser getMemberInfoByLoginNameAndMobilePhone(@Param("login_name") String login_name, @Param("mobile_phone") String mobile_phone);
+    /**
+     * 根据用户登录名和认证手机号去获取用户信息
+     * @param login_name
+     * @param email
+     * @return
+     */
+    @Results({
+            @Result(property = "loginName", column = "login_name"),
+            @Result(property = "userId", column = "user_id"),
+            @Result(property = "nickName", column = "nick_name"),
+            @Result(property = "mobilePhone", column = "mobile_phone"),
+            @Result(property = "headImage", column = "head_image"),
+            @Result(property = "isMobile", column = "is_mobile"),
+            @Result(property = "isEmail", column = "is_email"),
+            @Result(property = "isIdentity", column = "is_identity"),
+            @Result(property = "lastLoginTime", column = "last_login_time"),
+            @Result(property = "lastLoginDate", column = "last_login_date"),
+            @Result(property = "registerTime", column = "register_time"),
+            @Result(property = "registerDate", column = "register_date"),
+            @Result(property = "spreadId", column = "spread_id"),
+            @Result(property = "roleId", column = "role_id"),
+            @Result(property = "addTime", column = "add_time"),
+    })
+    @Select("SELECT * FROM zh_member.mb_member WHERE login_name=#{login_name} AND email=#{email}")
+    public UUser getMemberInfoByLoginNameAndEmail(@Param("login_name") String login_name, @Param("email") String email);
 
 }

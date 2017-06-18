@@ -39,7 +39,6 @@ public class MemberController {
     SmsServiceFo smsServiceFo;
     @Autowired
     AuthService authService;
-
     /**
      * 注册用户第一步
      * 如果有被绑定的则提示用户解绑
@@ -56,11 +55,11 @@ public class MemberController {
             if (params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())) {
                 throw new ProcException("注册手机号不能为空!");
             }
-            if(authService.isPhoneBind(params)){
-                throw new ProcException("手机号已被绑定!");
-            }
             if(authService.isPhoneRegister(params)){
                 throw new ProcException("手机号已注册!");
+            }
+            if(authService.isPhoneBind(params)){
+                throw new ProcException("手机号已被绑定!");
             }
             return RespData.create(RspConstants.SUCCESS,"欢迎注册新用户",null,DateUtil.getCurrentTime());
         }catch (ProcException proc){
@@ -159,6 +158,33 @@ public class MemberController {
         }
     }
     /**
+     * 忘记密码第一步
+     * 校验登录名是否存在
+     * @param request
+     * @return
+     */
+    @PostMapping("isRegister")
+    public RespData isRegister(HttpServletRequest request){
+        try {
+            Map<String, Object> params = RequestUtil.getRequestMap(request);
+            if(params == null || params.size() == 0){
+                throw new Exception("参数列表不能为空！");
+            }
+            if (params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())) {
+                throw new ProcException("登录名不能为空!");
+            }
+            if(authService.isPhoneRegister(params)){
+                return RespData.create(RspConstants.SUCCESS,"存在当前用户",null,DateUtil.getCurrentTime());
+            }
+            return RespData.create(RspConstants.SERVICEERROR,"当前用户不存在",null,DateUtil.getCurrentTime());
+        }catch (ProcException proc){
+            return RespData.create(RspConstants.SERVICEERROR,proc.getMessage(),null,DateUtil.getCurrentTime());
+        }catch (Exception e){
+            return RespData.create(RspConstants.OTHERERROR,"操作异常，请您重试",null,DateUtil.getCurrentTime());
+        }
+    }
+    /**
+     * 忘记密码第二步(手机找回形式)
      * 手机忘记密码获取验证码
      * @param request
      * @return
@@ -170,10 +196,23 @@ public class MemberController {
             if(params == null || params.size() == 0){
                 throw new Exception("参数列表不能为空！");
             }
-            if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
-                throw new ProcException("用户名不能为空!");
+            if(params.get("login_name") == null || "".equals(params.get("login_name").toString())){
+                throw new ProcException("认证手机号不能为空!");
             }
-            params.put("sms_template_nid","register");
+            if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
+                throw new ProcException("认证手机号不能为空!");
+            }
+            // 先根据登录名和用户认证手机号去判断当前用户是否合法
+            //登录名
+            String login_name = params.get("login_name").toString();
+            //认证手机号
+            String mobile_phone = params.get("mobile_phone").toString();
+            Boolean isLeagal = memberServiceFo.isLegalByLoginNameAndMobilePhone(login_name,mobile_phone);
+            if(!isLeagal){
+                throw new ProcException("登录名和认证手机号不匹配,请输入正确的信息");
+            }
+            //发送短信验证码
+            params.put("sms_template_nid","forget");
             Map<String,Object> template_params = new HashMap<>();
             String code = RandomUtil.sixCode();
             //生成6位验证码并存入redis中
@@ -205,13 +244,25 @@ public class MemberController {
                 throw new Exception("参数列表不能为空！");
             }
             if(params.get("login_name") == null || "".equals(params.get("login_name").toString())){
-                throw new ProcException("用户名不能为空!");
+                throw new ProcException("登录名不能为空!");
+            }
+            if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
+                throw new ProcException("认证手机号不能为空!");
+            }
+            // 先根据登录名和用户认证手机号去判断当前用户是否合法
+            //登录名
+            String login_name = params.get("login_name").toString();
+            //认证手机号
+            String mobile_phone = params.get("mobile_phone").toString();
+            Boolean isLeagal = memberServiceFo.isLegalByLoginNameAndMobilePhone(login_name,mobile_phone);
+            if(!isLeagal){
+                throw new ProcException("登录名和认证手机号不匹配,请输入正确的信息");
             }
             if(params.get("code") == null || "".equals(params.get("code").toString())){
                 throw new ProcException("请输入验证码！");
             }
             String inoutCode = params.get("code").toString();
-            String rediskey = "forgetpassword_phone_"+params.get("login_name").toString();
+            String rediskey = "forgetpassword_phone_"+params.get("mobile_phone").toString();
             String code = VCache.get(rediskey);
             if(code == null || "".equals(code)){
                 throw new ProcException("验证码已过期，请重新获取验证码！");
@@ -224,6 +275,7 @@ public class MemberController {
                 throw new Exception("当前用户不存在！");
             }
             params.put("member_id",user.getId());
+            params.put("type",1);
             memberServiceFo.updateMemberPassword(params);
             //修改为密码后删除redis对应键值对
             VCache.delByKey(rediskey);
@@ -234,7 +286,50 @@ public class MemberController {
             return RespData.create(RspConstants.OTHERERROR,"操作异常，请您重试",null,DateUtil.getCurrentTime());
         }
     }
-
+    /**
+     * 忘记密码(邮箱找回形式)
+     * @param request
+     * @return
+     */
+    @PostMapping("emailForgetPassword")
+    public RespData emailForgetPassword(HttpServletRequest request){
+        try {
+            Map<String, Object> params = RequestUtil.getRequestMap(request);
+            if(params == null || params.size() == 0){
+                throw new Exception("参数列表不能为空！");
+            }
+            if(params.get("login_name") == null || "".equals(params.get("login_name").toString())){
+                throw new ProcException("登录名不能为空!");
+            }
+            if(params.get("email") == null || "".equals(params.get("email").toString())){
+                throw new ProcException("认证手机号不能为空!");
+            }
+            // 先根据登录名和用户认证手机号去判断当前用户是否合法
+            //登录名
+            String login_name = params.get("login_name").toString();
+            //认证手机号
+            String email = params.get("email").toString();
+            Boolean isLeagal = memberServiceFo.isLegalByLoginNameAndEmail(login_name,email);
+            if(!isLeagal){
+                throw new ProcException("登录名和认证手机号不匹配,请输入正确的信息");
+            }
+            //发送短信验证码
+            params.put("sms_template_nid","forget");
+            Map<String,Object> template_params = new HashMap<>();
+            String code = RandomUtil.sixCode();
+            //生成6位验证码并存入redis中
+            template_params.put("code",code);
+            params.put("template_params",template_params);
+            String rediskey = "forgetpassword_phone_"+params.get("mobile_phone").toString();
+            VCache.setex(rediskey,code,300);
+            smsServiceFo.sendSms(params);
+            return RespData.create(RspConstants.SUCCESS,"短信发送成功！",null,DateUtil.getCurrentTime());
+        }catch (ProcException proc){
+            return RespData.create(RspConstants.SERVICEERROR,proc.getMessage(),null,DateUtil.getCurrentTime());
+        }catch (Exception e){
+            return RespData.create(RspConstants.OTHERERROR,"操作异常，请您重试",null,DateUtil.getCurrentTime());
+        }
+    }
     /**
      * 用户手机号登录
      * @param request
