@@ -49,6 +49,20 @@ public class AppServerApplicationTests {
 		}
 	}
 	@Test
+	public void emailPwdDesign(){
+		try {
+			String token = "TSaretL6FRvkuJgabbndyxBhDjDvuIZtamzVIsp85d3YoP2jyGvszyTjaLKcgojLZID26vQicUzq\n" +
+					"1p2w5b3dv97QWowl9cwqPm6/Zgu+6WjDwwuaAFTfZc5W9PlySImFYHXjlyFc2X8PD0+pXzdZupvi\n" +
+					"cEkd7HgqE1S70k47TqQ=";
+			String sign = "iis8zBt/Vy5KlXoMKlH4XXN6gZ9sLlGFPixl8inQLea1UtyNOvSBwWgH2r3j1PW8SZOAoahIrraZ\n"+
+					      "4vDip+w7ZgxglmMlDiLgkqncgYWNZWya2UjgIlqENi4qP/S9CxZK7XbH3uD2StAqQllA8wHt1usp\n"+
+					      "vtZ59zUWkvhcZyiUZ3U=";
+			System.out.println(emailServiceFo.designEmailPwd(token,sign));
+		}catch (Exception e){
+			System.out.println(e.getMessage());
+		}
+	}
+	@Test
 	public void getWeather(){
 		try{
 			System.out.println("当前的天气状况是============\n"+weatherServiceFo.getWeatherInfoByIp("33","106.39.84.154"));

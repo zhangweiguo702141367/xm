@@ -7,23 +7,21 @@ import com.zh.dubbo.core.shiro.tooken.manager.TokenManager;
 import com.zh.dubbo.entity.RespData;
 import com.zh.dubbo.entity.UUser;
 import com.zh.dubbo.exception.ProcException;
+import com.zh.dubbo.fo.EmailServiceFo;
 import com.zh.dubbo.fo.MemberServiceFo;
 import com.zh.dubbo.fo.SmsServiceFo;
-import com.zh.dubbo.untils.DateUtil;
-import com.zh.dubbo.untils.IPUtil;
-import com.zh.dubbo.untils.RandomUtil;
-import com.zh.dubbo.untils.RequestUtil;
+import com.zh.dubbo.untils.*;
 import com.zh.dubbo.untils.security.SHAUtil;
 import com.zh.dubbo.utils.UniqIdUtil;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,6 +37,8 @@ public class MemberController {
     SmsServiceFo smsServiceFo;
     @Autowired
     AuthService authService;
+    @Autowired
+    EmailServiceFo emailServiceFo;
     /**
      * 注册用户第一步
      * 如果有被绑定的则提示用户解绑
@@ -170,7 +170,7 @@ public class MemberController {
             if(params == null || params.size() == 0){
                 throw new Exception("参数列表不能为空！");
             }
-            if (params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())) {
+            if (params.get("login_name") == null || "".equals(params.get("login_name").toString())) {
                 throw new ProcException("登录名不能为空!");
             }
             if(authService.isPhoneRegister(params)){
@@ -287,7 +287,7 @@ public class MemberController {
         }
     }
     /**
-     * 忘记密码(邮箱找回形式)
+     * 忘记密码(邮箱找回形式)第一步
      * @param request
      * @return
      */
@@ -307,23 +307,76 @@ public class MemberController {
             // 先根据登录名和用户认证手机号去判断当前用户是否合法
             //登录名
             String login_name = params.get("login_name").toString();
-            //认证手机号
+            //认证邮箱
             String email = params.get("email").toString();
             Boolean isLeagal = memberServiceFo.isLegalByLoginNameAndEmail(login_name,email);
             if(!isLeagal){
                 throw new ProcException("登录名和认证手机号不匹配,请输入正确的信息");
             }
-            //发送短信验证码
-            params.put("sms_template_nid","forget");
-            Map<String,Object> template_params = new HashMap<>();
-            String code = RandomUtil.sixCode();
-            //生成6位验证码并存入redis中
-            template_params.put("code",code);
-            params.put("template_params",template_params);
-            String rediskey = "forgetpassword_phone_"+params.get("mobile_phone").toString();
-            VCache.setex(rediskey,code,300);
-            smsServiceFo.sendSms(params);
-            return RespData.create(RspConstants.SUCCESS,"短信发送成功！",null,DateUtil.getCurrentTime());
+            UUser user = memberServiceFo.getMmeberInfoByLoginName(login_name);
+            if(user == null){
+                throw new ProcException("用户信息异常");
+            }
+            String tokenAndSign = emailServiceFo.getEmailPwdSign(login_name,email);
+            System.out.println("tokenAndSign============="+tokenAndSign);
+            params.put("template_nid","forgetpassword");
+            params.put("to_email",email);
+            params.put("member_id",user.getId());
+            Map<String,Object> template_param = new HashMap<String,Object>();
+            template_param.put("tokenAndSign", tokenAndSign);
+            params.put("template_param",template_param);
+            emailServiceFo.sendAuthEmail(params);
+            return RespData.create(RspConstants.SUCCESS,"邮件发送成功",null, DateUtil.getCurrentTime());
+        }catch (ProcException proc){
+            return RespData.create(RspConstants.SERVICEERROR,proc.getMessage(),null,DateUtil.getCurrentTime());
+        }catch (Exception e){
+            return RespData.create(RspConstants.OTHERERROR,"操作异常，请您重试",null,DateUtil.getCurrentTime());
+        }
+    }
+    /**
+     * 忘记密码(邮箱找回形式)第二步
+     * @param request
+     * @return
+     */
+    @PostMapping("emailChangePassword")
+    public RespData emailChangePassword(HttpServletRequest request){
+        try {
+            Map<String, Object> params = RequestUtil.getRequestMap(request);
+            if(params == null || params.size() == 0){
+                throw new Exception("参数列表不能为空！");
+            }
+            if(params.get("token") == null || "".equals(params.get("token").toString())){
+                throw new ProcException("签名不能为空!");
+            }
+            if(params.get("sign") == null || "".equals(params.get("sign").toString())){
+                throw new ProcException("签名不能为空!");
+            }
+            if(params.get("password") == null || "".equals(params.get("password").toString())){
+                throw new ProcException("登录密码不能为空!");
+            }
+            String token = URLDecoder.decode(params.get("token").toString(),"UTF-8");
+            String sign = URLDecoder.decode(params.get("sign").toString(),"UTF-8");
+            System.out.println("token============"+token);
+            System.out.println("sign============="+sign);
+            Map<String,Object> signMap = emailServiceFo.designEmailPwd(token,sign);
+            // 先根据登录名和用户认证手机号去判断当前用户是否合法
+            //登录名
+            String login_name = signMap.get("login_name").toString();
+            //认证手机号
+            String email = signMap.get("email").toString();
+            Boolean isLeagal = memberServiceFo.isLegalByLoginNameAndEmail(login_name,email);
+            if(!isLeagal){
+                throw new ProcException("登录名和认证邮箱不匹配");
+            }
+            UUser user = memberServiceFo.getMmeberInfoByLoginName(login_name);
+            if(user == null){
+                throw new ProcException("用户信息异常");
+            }
+            params.put("type",1);//修改密码
+            params.put("member_id",user.getId());
+            //修改密码
+            memberServiceFo.updateMemberPassword(params);
+            return RespData.create(RspConstants.SUCCESS,"密码修改成功",null, DateUtil.getCurrentTime());
         }catch (ProcException proc){
             return RespData.create(RspConstants.SERVICEERROR,proc.getMessage(),null,DateUtil.getCurrentTime());
         }catch (Exception e){

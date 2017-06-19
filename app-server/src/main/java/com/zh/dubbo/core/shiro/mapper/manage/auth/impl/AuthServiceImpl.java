@@ -103,11 +103,11 @@ public class AuthServiceImpl implements AuthService {
         if(params == null || params.size() == 0){
             throw new Exception("参数列表不能为空！");
         }
-        if(params.get("mobile_phone") == null || "".equals(params.get("mobile_phone").toString())){
+        if(params.get("login_name") == null || "".equals(params.get("login_name").toString())){
             throw new ProcException("手机号不能为空");
         }
         //如果当前手机号是登陆名则返回false
-        UUser member_info = memberDao.getMemberInfoByLoginPhone(params.get("mobile_phone").toString());
+        UUser member_info = memberDao.getMemberInfoByLoginPhone(params.get("login_name").toString());
         if(member_info != null){
             return true;
         }
