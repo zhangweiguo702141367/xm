@@ -13,7 +13,7 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new MyInterceptor()).addPathPatterns("/test");
+        registry.addInterceptor(new MyInterceptor()).addPathPatterns("/*");
         super.addInterceptors(registry);
     }
 }
