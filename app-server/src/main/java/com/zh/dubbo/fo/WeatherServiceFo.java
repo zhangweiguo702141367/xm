@@ -43,6 +43,7 @@ public class WeatherServiceFo {
         if(weather == null || weather.size() == 0){
             throw new ProcException("获取天气信息异常！");
         }
+        weather.put("city",baiduResp.get("city"));
         return weather;
     }
 }
