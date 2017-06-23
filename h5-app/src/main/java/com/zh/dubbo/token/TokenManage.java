@@ -12,6 +12,8 @@ import com.zh.dubbo.utils.JedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -133,5 +135,16 @@ public class TokenManage {
             throw new ProcException("登录异常");
         }
         JedisUtil.setex(redisName, token, expireTime);
+    }
+    public static String expireAes() throws Exception{
+        Long now = DateUtil.getCurrentTime();
+        String baseStr = Base64.encodeToString(AESUtil.encrypt(now.toString(),"aa12312"),true);
+        String urlEnStr = URLEncoder.encode(baseStr,"UTF-8");
+        return urlEnStr;
+    }
+    public static Long expireDes(String expire) throws Exception{
+        String urlDecStr = URLDecoder.decode(expire,"UTF-8");
+        Long expireTime = Long.valueOf(new String(AESUtil.decrypt(Base64.decode(urlDecStr),"aa12312")));
+        return expireTime;
     }
 }

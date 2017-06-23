@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -392,7 +394,7 @@ public class MemberController {
      * @return
      */
     @PostMapping("phoneLogin")
-    public RespData phoneLogin(HttpServletRequest request){
+    public RespData phoneLogin(HttpServletRequest request,HttpServletResponse response){
         RespData respData = new RespData();
         try {
             Map<String, Object> params = RequestUtil.getRequestMap(request);
@@ -417,8 +419,10 @@ public class MemberController {
             params.put("login_ip",ip);
             //做登录
             Map<String,Object> signMap = TokenManage.tokenCreate(user,ip);
-            request.setAttribute("authtoken",signMap.get("token"));
-            request.setAttribute("authsign",signMap.get("sign"));
+            response.addHeader("authtoken", URLEncoder.encode(signMap.get("token").toString(),"UTF-8"));
+            response.addHeader("authsign",URLEncoder.encode(signMap.get("sign").toString(),"UTF-8"));
+//            request.setAttribute("authtoken",signMap.get("token"));
+//            request.setAttribute("authsign",signMap.get("sign"));
             params.put("member_id",user.getId());
             try {
                 //插入登录日志

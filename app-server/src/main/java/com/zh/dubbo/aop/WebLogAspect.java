@@ -1,9 +1,7 @@
 package com.zh.dubbo.aop;
 
-import com.zh.dubbo.constant.RspConstants;
+import com.zh.dubbo.core.shiro.tooken.manager.TokenManager;
 import com.zh.dubbo.entity.RespData;
-import com.zh.dubbo.token.TokenManage;
-import com.zh.dubbo.untils.DateUtil;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -19,6 +17,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
+
 /**
  * Created by Administrator on 2017/6/22.
  */
@@ -27,7 +26,7 @@ import java.util.Arrays;
 @Order(99)
 public class WebLogAspect {
 
-    private Logger logger = LoggerFactory.getLogger(TokenManage.class);
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Pointcut("execution(public * com.zh.dubbo.controller..*.*(..))")
     public void webLog(){}
@@ -51,28 +50,12 @@ public class WebLogAspect {
     public void doAfterReturning(Object ret) throws Throwable {
         // 处理完请求，返回内容
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        HttpServletRequest request = attributes.getRequest();
-        HttpServletResponse response = attributes.getResponse();
-        Object nologin = response.getHeader("nologin");
-        if(nologin != null && "nologin".equals(nologin.toString())){
-            ret = RespData.create(RspConstants.UNLOGIN,"未登录",null, DateUtil.getCurrentTime());
-            response.setHeader("Access-Control-Expose-Headers","authsign,authtoken");
-            response.setHeader("Access-Control-Allow-Origin","*");
+        RespData resp = (RespData) ret;
+        if(TokenManager.isLogin()){
+            resp.setLoginStatus(true);
         }else{
-            Object authtoken = response.getHeader("authtoken");
-            Object authsign = response.getHeader("authsign");
-            logger.error("aop authtoken==="+authtoken);
-            logger.error("aop authsign==="+authsign);
-            if(authtoken != null && authsign != null) {
-                response.addHeader("authtoken", authtoken+"."+TokenManage.expireAes());
-                response.addHeader("authsign", authsign.toString());
-                response.setHeader("Access-Control-Expose-Headers","authsign,authtoken");
-            }else{
-                response.setHeader("Access-Control-Expose-Headers","authsign,authtoken");
-            }
-            logger.info("RESPONSE : " + ret);
+            resp.setLoginStatus(false);
         }
+        logger.info("RESPONSE : " + ret);
     }
-
-
 }

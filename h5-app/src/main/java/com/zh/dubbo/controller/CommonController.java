@@ -9,9 +9,12 @@ import com.zh.dubbo.untils.DateUtil;
 import com.zh.dubbo.untils.IPUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,11 +32,13 @@ public class CommonController {
      * @param request
      * @return
      */
-    @GetMapping("/unlogin")
-    public RespData unlogin(HttpServletRequest request){
+    @RequestMapping("/login")
+    public RespData unlogin(HttpServletRequest request,HttpServletResponse response){
+        response.setHeader("authtoken",null);
+        response.setHeader("authsign",null);
         return RespData.create(RspConstants.UNLOGIN,"未登录",null,DateUtil.getCurrentTime());
     }
-    @GetMapping("/login")
+    @GetMapping("/unlogin")
     public String test1(HttpServletRequest request){
         String result = "test1 this request ip +"+ IPUtil.getIpAddr(request);
         System.out.println("IPUtil===="+result);

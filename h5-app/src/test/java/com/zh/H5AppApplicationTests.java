@@ -34,4 +34,15 @@ public class H5AppApplicationTests {
 			e.printStackTrace();
 		}
 	}
+	@Test
+	public void test1(){
+		try{
+		String exprieStr = TokenManage.expireAes();
+		logger.error("exprieStr=="+exprieStr);
+		Long expireTime = TokenManage.expireDes(exprieStr);
+		logger.error("expireTime==="+expireTime);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+	}
 }

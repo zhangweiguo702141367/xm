@@ -15,6 +15,8 @@ public class RespData implements Serializable{
     private String message;
     private Object data;
     private Long rspTime;
+    private String authToken;
+    private String authSign;
 
     public RespData(){
         super();
@@ -25,6 +27,8 @@ public class RespData implements Serializable{
         this.message = message;
         this.data = data;
         this.rspTime = rspTime;
+        this.authToken = "";
+        this.authSign = "";
     }
     //自动创建返回值
     public static RespData create(int status, String message, Object data,Long rspTime) {
@@ -33,8 +37,11 @@ public class RespData implements Serializable{
         respData.message = message;
         respData.data = data;
         respData.rspTime = rspTime;
+        respData.authToken = "";
+        respData.authSign = "";
         return respData;
     }
+
     public int getStatus() {
         return status;
     }
@@ -67,6 +74,22 @@ public class RespData implements Serializable{
         this.rspTime = rspTime;
     }
 
+    public String getAuthToken() {
+        return authToken;
+    }
+
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
+    }
+
+    public String getAuthSign() {
+        return authSign;
+    }
+
+    public void setAuthSign(String authSign) {
+        this.authSign = authSign;
+    }
+
     @Override
     public String toString() {
         return "RespData{" +
@@ -74,6 +97,8 @@ public class RespData implements Serializable{
                 ", message='" + message + '\'' +
                 ", data=" + data +
                 ", rspTime=" + rspTime +
+                ", authToken='" + authToken + '\'' +
+                ", authSign='" + authSign + '\'' +
                 '}';
     }
 }

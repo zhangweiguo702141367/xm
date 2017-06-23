@@ -13,7 +13,8 @@ public class MyWebAppConfigurer extends WebMvcConfigurerAdapter {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new MyInterceptor()).addPathPatterns("/*");
+        registry.addInterceptor(new MyInterceptor()).addPathPatterns("/**").excludePathPatterns(
+                "/robots.txt");
         super.addInterceptors(registry);
     }
 }
